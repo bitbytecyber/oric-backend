@@ -1,0 +1,6 @@
+{% load i18n %}{% autoescape off %}Hello from the NED ORIC Data Portal,
+{% block content %}{% endblock content %}
+
+— ORIC, NED University of Engineering & Technology
+Questions? Reply to oric@neduet.edu.pk
+{% endautoescape %}

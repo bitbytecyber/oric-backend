@@ -1,0 +1,37 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+# Same LTS line as sis_backend so both projects share upgrade cadence and know-how.
+django = ">=4.2.16,<4.3"
+djangorestframework = "*"
+# OpenAPI schema + Swagger/Redoc, mounted only when SERVE_API_DOCS is set.
+drf-spectacular = "*"
+django-cors-headers = "*"
+django-filter = "*"
+django-extensions = "*"
+# Row-level change history for every model (who changed what, when) — same
+# setup as sis_backend: include-all-models + request-id correlation.
+django-auditlog = "*"
+# Authentication, exactly the sis_backend stack: allauth headless (SPA-only login),
+# email login + login-by-code, TOTP/recovery-code MFA, tracked user sessions.
+django-allauth = {extras = ["headless", "mfa", "socialaccount"], version = "==65.19.0"}
+# allauth 65.19 supports fido2 1.x and 2.x; held on 1.x like sis_backend.
+fido2 = ">=1.1.2,<2"
+# allauth's socialaccount extra (Google id_token verification) needs these, as in sis_backend.
+PyJWT = "*"
+requests = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
+# Evidence images + team photos (ImageField).
+pillow = "*"
+# CSV/XLSX report exports for ORIC staff (HEC scorecard compilation).
+openpyxl = "*"
+python-dateutil = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
