@@ -10,7 +10,7 @@ services:
       - 5447:5432
     volumes:
       - oric_backend_postgres_dev:/var/lib/postgresql/data
-      - /root/ned_oric_backend/db_backup:/home/pg
+      - /home/ubuntu/bitbytecyber/ned_oric_backend/db_backup:/home/pg
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_USER: ${DATABASE_USER}
@@ -29,13 +29,13 @@ services:
     image: bitbytecyber/ned-oric-backend:dev
     build: .
     ports:
-      - 8102:8000
+      - 8088:8000
     restart: always
     depends_on:
       - db
     volumes:
-      - /root/ned_oric_backend/dev/media:/app/media
-      - /root/ned_oric_backend/dev/static:/app/staticfiles
+      - /home/ubuntu/bitbytecyber/ned_oric_backend/dev/media:/app/media
+      - /home/ubuntu/bitbytecyber/ned_oric_backend/dev/static:/app/staticfiles
     environment:
       - COMPOSE_PROJECT_NAME
       - DEBUG
