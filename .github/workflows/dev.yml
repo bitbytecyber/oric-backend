@@ -8,7 +8,7 @@ on:
       - "develop"
 
 env:
-  IMAGE_NAME: bitbytecyber/ned_oric_backend
+  IMAGE_NAME: bitbytecyber/ned-oric-backend
   TAG: dev
   # Everything below lives on the Oracle box. Paths mirror the frontend's
   # (/home/ubuntu/bitbytecyber/sis_frontend/...) — Oracle's Ubuntu image has no
