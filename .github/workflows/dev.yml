@@ -53,7 +53,9 @@ jobs:
           # Layer cache in the Actions cache. The apt + pipenv + Playwright
           # layers dominate the build and change only when the Pipfile does.
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # ignore-error: a cache-export failure ("failed to reserve cache",
+          # quota/eviction, service hiccup) must not cancel the image push.
+          cache-to: type=gha,mode=max,ignore-error=true
 
   deploy:
     name: Deploy Docker Container on Oracle Cloud
