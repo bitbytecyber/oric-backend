@@ -50,10 +50,13 @@ jobs:
           push: true
           platforms: linux/arm64
           tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
-          # Layer cache in the Actions cache. The apt + pipenv + Playwright
+          # Layer cache in a Docker Hub tag. The apt + pipenv + Playwright
           # layers dominate the build and change only when the Pipfile does.
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # Registry cache rather than type=gha: this workflow runs on a
+          # closed PR, where the Actions cache refused to reserve space.
+          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
+          # ignore-error: a cache-export failure must not cancel the image push.
+          cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max,ignore-error=true
 
   deploy:
     name: Deploy Docker Container on Oracle Cloud
