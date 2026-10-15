@@ -5,6 +5,7 @@ from django.db.models import Count, Q
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
+from rest_framework.negotiation import DefaultContentNegotiation
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -98,11 +99,23 @@ class HomeView(APIView):
         return Response(out)
 
 
+class FileFormatNegotiation(DefaultContentNegotiation):
+    """`?format=` on the export picks the file type (csv/xlsx), not a DRF renderer.
+
+    DRF's default negotiation reads the same param and 404s when no renderer is named
+    `xlsx`, so errors here always render with the first (JSON) renderer instead.
+    """
+
+    def select_renderer(self, request, renderers, format_suffix=None):
+        return renderers[0], renderers[0].media_type
+
+
 class ExportView(CapabilityAPIViewMixin, APIView):
     """CSV (headers only) or XLSX (headers + one sheet per section) of returns in scope."""
 
     required_capability = "submission.export"
     envelope = False
+    content_negotiation_class = FileFormatNegotiation
 
     def get(self, request):
         pillar = request.query_params.get("pillar")
