@@ -1,11 +1,11 @@
-"""Validate entry/count payloads against the form registry."""
+"""Validate submission payloads against the category registry."""
 import datetime
 import re
 from decimal import Decimal, InvalidOperation
 
 from rest_framework.exceptions import ValidationError
 
-from .registry import DEPARTMENTS, PILLAR_BY_KEY, SECTION_BY_KEY
+from .registry import CATEGORY_BY_KEY
 
 URL_RE = re.compile(r"^(https?://|doi:|10\.)\S+$", re.I)
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -17,8 +17,8 @@ ALLOWED_EVIDENCE_TYPES = {
 MAX_EVIDENCE_BYTES = 10 * 1024 * 1024
 
 
-def file_fields(section_key: str) -> list[dict]:
-    return [f for f in SECTION_BY_KEY[section_key]["fields"] if f["type"] == "file"]
+def file_fields(category: str) -> list[dict]:
+    return [f for f in CATEGORY_BY_KEY[category]["fields"] if f["type"] == "file"]
 
 
 def clean_value(field: dict, raw):
@@ -28,7 +28,7 @@ def clean_value(field: dict, raw):
         return None
     if isinstance(raw, str):
         raw = raw.strip()
-    if t in ("text", "textarea"):
+    if t in ("text", "textarea", "org"):
         return str(raw)[:5000]
     if t == "email":
         if not EMAIL_RE.match(str(raw)):
@@ -59,10 +59,6 @@ def clean_value(field: dict, raw):
         if v < 0:
             raise ValueError("Cannot be negative.")
         return float(v)
-    if t == "department":
-        if raw not in DEPARTMENTS:
-            raise ValueError("Pick a department from the list.")
-        return raw
     if t in ("select", "radio"):
         options = field.get("options") or []
         if raw in options:
@@ -74,57 +70,68 @@ def clean_value(field: dict, raw):
     return raw
 
 
-def validate_entry_data(section_key: str, data: dict, *, existing_files: set[str], incoming_files: set[str],
-                        partial: bool = False) -> dict:
-    if section_key not in SECTION_BY_KEY:
-        raise ValidationError({"section": "Unknown section."})
-    section = SECTION_BY_KEY[section_key]
+def validate_data(category: str, data: dict, *, existing_files: set[str] = frozenset(),
+                  incoming_files: set[str] = frozenset(), draft: bool = False) -> dict:
+    """Clean ``data`` for ``category``. ``draft=True`` skips "required" checks (drafts may be incomplete)."""
+    if category not in CATEGORY_BY_KEY:
+        raise ValidationError({"category": "Unknown category."})
+    c = CATEGORY_BY_KEY[category]
     errors, cleaned = {}, {}
-    for f in section["fields"]:
+    for f in c["fields"]:
         name = f["name"]
         if f["type"] == "file":
-            if f["required"] and name not in existing_files and name not in incoming_files and not partial:
-                errors[name] = "This file is required."
-            continue
-        if partial and name not in data:
+            if f["required"] and not draft and name not in existing_files and name not in incoming_files                     and not data.get("evidence_link"):
+                errors[name] = "Attach the file or paste an evidence link."
             continue
         try:
             value = clean_value(f, data.get(name))
         except ValueError as exc:
             errors[name] = str(exc)
             continue
-        if value is None and f["required"]:
-            errors[name] = "This field is required."
+        if value is None:
+            if f["required"] and not draft:
+                errors[name] = "This field is required."
             continue
         cleaned[name] = value
 
-    # cross-field rules
     s, e = cleaned.get("start_date"), cleaned.get("end_date")
     if s and e and e < s:
         errors["end_date"] = "End date cannot be before the start date."
-    if section_key == "B2" and cleaned.get("filed_or_granted") == "Granted":
-        if not cleaned.get("granting_authority") and not partial:
-            errors["granting_authority"] = "Required when the patent is granted."
     if errors:
-        raise ValidationError(errors)
+        raise ValidationError({"data": errors})
     return cleaned
 
 
-def validate_counts(pillar: str, counts: dict) -> dict:
-    p = PILLAR_BY_KEY[pillar]
-    errors, cleaned = {}, {}
-    for f in p["counts"]:
-        raw = counts.get(f["name"], 0)
-        try:
-            v = int(raw or 0)
-            if v < 0 or v > 999:
-                raise ValueError
-            cleaned[f["name"]] = v
-        except (TypeError, ValueError):
-            errors[f["name"]] = "Enter a whole number between 0 and 999."
+def validate_people(category: str, people: list[dict], *, draft: bool = False) -> list[dict]:
+    """``people`` = [{role, person_id?, name?, designation?, affiliation?}] matching the category's slots."""
+    c = CATEGORY_BY_KEY[category]
+    slots = {p["role"]: p for p in c["people"]}
+    out, errors = [], {}
+    for i, raw in enumerate(people or []):
+        role = raw.get("role")
+        slot = slots.get(role)
+        if not slot:
+            errors[str(i)] = f"Unknown role '{role}' for this category."
+            continue
+        pid = raw.get("person_id") or raw.get("person")
+        name = (raw.get("name") or "").strip()
+        if not pid and not name:
+            continue
+        if not pid and not slot["external"] and not slot["lead"]:
+            errors[str(i)] = f"{slot['label']} must be a NED colleague."
+            continue
+        out.append({"role": role, "person_id": int(pid) if pid else None, "name": name[:255],
+                    "designation": (raw.get("designation") or "")[:120],
+                    "affiliation": (raw.get("affiliation") or "")[:255]})
+    for role, slot in slots.items():
+        n = sum(1 for p in out if p["role"] == role)
+        if not slot["many"] and n > 1:
+            errors[role] = f"Only one {slot['label']}."
+        if slot["required"] and not slot["lead"] and n == 0 and not draft:
+            errors[role] = f"{slot['label']} is required."
     if errors:
-        raise ValidationError({"counts": errors})
-    return cleaned
+        raise ValidationError({"people": errors})
+    return out
 
 
 def validate_upload(f):

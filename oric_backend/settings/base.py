@@ -73,13 +73,17 @@ APP_MODULES = [
     "audit.apps.AuditConfig",
     # Users + session login/logout/me. AUTH_USER_MODEL lives here.
     "people.apps.PeopleConfig",
-    # Departments, reporting cycles (fiscal years), ORIC team, contact inbox.
+    # Faculties, departments, organizations, reporting cycles (fiscal years), ORIC team, contact inbox.
     "org.apps.OrgConfig",
     # Capability catalog, roles, department-scoped role assignments, /me/abilities.
     "rbac.apps.RbacConfig",
-    # The three pillar returns (legacy RicForm1/2/3), their entries + evidence,
-    # review workflow. Form definitions: submissions/registry.py.
+    # One record per activity (grant, patent, MoU …), contributors, evidence,
+    # ORIC verification. Category definitions: submissions/registry.py.
     "submissions.apps.SubmissionsConfig",
+    # Directory CSVs, HEC workbook, Google Form response imports + unmatched queue.
+    "imports.apps.ImportsConfig",
+    # HEC ORIC scorecard engine, Index-A profile, KPI overrides, HEC workbook export.
+    "scorecard.apps.ScorecardConfig",
     # Year-wise dashboards and CSV/XLSX exports (legacy /reports, /report_ric_3).
     "reports.apps.ReportsConfig",
     # In-app notifications (+ email) for workflow events.

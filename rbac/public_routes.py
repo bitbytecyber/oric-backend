@@ -21,4 +21,9 @@ AUTHENTICATED_EXEMPT_ROUTE_NAMES = {
     "notifications-mark-read",
     "notifications-mark-all-read",
     "notifications-unread-count",
+    "explore",
+    "reports-export",
+    "reports-export-columns",
+    "saved-views-list",
+    "saved-views-detail",
 }

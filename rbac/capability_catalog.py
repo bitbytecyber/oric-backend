@@ -82,30 +82,45 @@ def _crud(module, resource, *, extra=(), skip=(), dangerous=("delete",), descrip
 def build_capability_catalog() -> list[CapabilityDef]:
     caps: list[CapabilityDef] = []
 
-    # --- Submissions (pillar returns) -------------------------------------------
+    # --- Submissions (one activity record each) ----------------------------------------
     caps += _crud(
-        "submissions", "submission", extra=("review", "approve", "export"),
+        "submissions", "submission", extra=("verify", "export", "add_on_behalf", "add_oric"),
+        dangerous=("delete",),
         descriptions={
-            "view": "See other people's returns (within the assignment's department / the role's pillars). "
-                    "Everyone can always see their own.",
-            "add": "File your own annual return (faculty).",
-            "change": "Edit someone else's return, e.g. ORIC staff correcting data.",
-            "delete": "Delete a return and all its entries and evidence.",
-            "review": "Start review and return a submission to its owner for revision.",
-            "approve": "Approve or reject a submission, or reopen a decided one.",
-            "export": "Download returns as CSV / Excel.",
+            "view": "See other people's submissions (within the assignment's faculty / department and the role's "
+                    "pillars / categories). Everyone always sees their own and those they contributed to.",
+            "add": "Record your own activities (faculty).",
+            "add_on_behalf": "Record an activity for someone else in your scope (Chairman, Dean, ORIC).",
+            "add_oric": "Record institution-level ORIC data (policies, IRB, revenue, grant opportunities ...).",
+            "change": "Edit someone else's submission, e.g. ORIC staff correcting data.",
+            "delete": "Delete a submission and its evidence.",
+            "verify": "Verify, return or reject submissions (ORIC).",
+            "export": "Download submissions as CSV / Excel / HEC workbook.",
         },
     )
 
-    # --- Reports -------------------------------------------------------------------
+    # --- Reports / scorecard ----------------------------------------------------------------
     caps += [
-        _cap("reports", "report", "view", description="Year-wise scorecard dashboards across departments."),
-        _cap("reports", "report", "export", description="Export scorecard tables."),
-        _cap("reports", "dashboard", "view_admin", description="Institution-wide KPIs on the home dashboard."),
+        _cap("reports", "report", "view", description="Dashboards and drill-down analytics."),
+        _cap("reports", "report", "export", description="Export report tables."),
+        _cap("reports", "dashboard", "view_admin", description="Scope KPIs on the home dashboard."),
+        _cap("scorecard", "scorecard", "view", description="HEC ORIC scorecard (computed live)."),
+        _cap("scorecard", "scorecard", "override", description="Override reported numbers / scores on the scorecard."),
+        _cap("scorecard", "institution_profile", "view", description="Index-A institution profile."),
+        _cap("scorecard", "institution_profile", "change", description="Edit the Index-A institution profile."),
+    ]
+
+    # --- Import ---------------------------------------------------------------------------------
+    caps += [
+        _cap("imports", "import", "view", description="See import batches and the unmatched queue."),
+        _cap("imports", "import", "run", is_dangerous=True,
+             description="Upload directory CSVs, HEC workbooks and form responses; resolve unmatched rows."),
     ]
 
     # --- Organisation -----------------------------------------------------------------
+    caps += _crud("org", "faculty")
     caps += _crud("org", "department")
+    caps += _crud("org", "organization")
     caps += _crud("org", "reporting_cycle", descriptions={
         "change": "Open / close a reporting year and move its deadline.",
     })
@@ -152,13 +167,30 @@ def expand_patterns(patterns: list[str], *, allow_never: bool = False) -> set[st
 
 
 # Self-service basics every staff/faculty role gets.
-FOUNDATION = ["department.view", "reporting_cycle.view", "team_member.view"]
+FOUNDATION = ["faculty.view", "department.view", "reporting_cycle.view", "team_member.view", "organization.view"]
 
 ORIC_STAFF = [
     *FOUNDATION,
-    "submission.view", "submission.change", "submission.review", "submission.approve", "submission.export",
-    "report.*", "dashboard.view_admin", "user.view",
+    "submission.view", "submission.change", "submission.verify", "submission.export", "submission.add_on_behalf",
+    "submission.add_oric", "report.*", "dashboard.view_admin", "scorecard.view", "institution_profile.view",
+    "user.view", "organization.*", "import.view",
 ]
+LEADERSHIP = [
+    *FOUNDATION,
+    "submission.view", "submission.export", "submission.add_on_behalf", "report.*", "dashboard.view_admin",
+    "scorecard.view",
+]
+
+IP_CATEGORIES = ["ip_disclosure", "patent", "licensing_negotiation", "license_signed", "licensing_revenue", "policy",
+                 "prototype", "creative_product"]
+TECH_TRANSFER_CATEGORIES = ["contract_research", "consultancy_opportunity", "consultancy_contract", "research_link",
+                            "collaboration_agreement", "industry_visit", "policy_advocacy", "civic_engagement",
+                            "award", "licensing_negotiation", "license_signed", "exhibition"]
+RESEARCH_OPS_CATEGORIES = ["grant_opportunity", "grant_hec_submitted", "grant_hec_approved", "grant_hec_completed",
+                           "grant_nonhec_submitted", "grant_nonhec_approved", "grant_nonhec_completed",
+                           "joint_submitted", "joint_approved", "joint_completed", "irb_review", "asrb_liaison",
+                           "publication", "research_revenue", "training_oric", "training_external",
+                           "training_oric_staff", "strategic_plan"]
 
 ROLE_DEFS: list[dict] = [
     {
@@ -171,70 +203,78 @@ ROLE_DEFS: list[dict] = [
     {
         "slug": "oric_director",
         "name": "Director ORIC",
-        "description": "Everything except super-admin role management.",
+        "description": "Sees and manages everything except super-admin role management.",
         "is_system": True,
         "patterns": ["*"],
     },
     {
         "slug": "oric_manager",
-        "name": "ORIC manager",
-        "description": "Reviews and approves returns for all pillars, runs reports, maintains team & cycles.",
+        "name": "ORIC manager (all categories)",
+        "description": "Verifies every category, runs reports & imports, maintains directory, team & fiscal years.",
         "is_system": True,
-        "patterns": [*ORIC_STAFF, "reporting_cycle.change", "team_member.*", "contact_message.*", "audit.view"],
+        "patterns": [*ORIC_STAFF, "import.run", "scorecard.override", "institution_profile.change",
+                     "reporting_cycle.change", "team_member.*", "contact_message.*", "audit.view",
+                     "faculty.*", "department.*", "user.add", "user.change"],
     },
     {
         "slug": "research_ops_manager",
         "name": "Manager — Research Operations & Development",
-        "description": "Reviews Research Excellence returns.",
+        "description": "Verifies research grants, IRB, publications, trainings and research revenue.",
         "is_system": True,
-        "pillars": ["RE"],
+        "categories": RESEARCH_OPS_CATEGORIES,
         "patterns": ORIC_STAFF,
     },
     {
         "slug": "ip_manager",
         "name": "Manager — Intellectual Property",
-        "description": "Reviews Innovation & Commercialization returns.",
+        "description": "Verifies IP disclosures, patents, licensing, prototypes and policies.",
         "is_system": True,
-        "pillars": ["IC"],
+        "categories": IP_CATEGORIES,
         "patterns": ORIC_STAFF,
     },
     {
         "slug": "tech_transfer_manager",
         "name": "Manager — Tech Transfer & University-Industry Linkage",
-        "description": "Reviews Innovation & Commercialization and Research Excellence returns.",
+        "description": "Verifies contract research, consultancy, linkages, agreements, visits and awards.",
         "is_system": True,
-        "pillars": ["IC", "RE"],
+        "categories": TECH_TRANSFER_CATEGORIES,
         "patterns": ORIC_STAFF,
     },
     {
         "slug": "incubation_manager",
         "name": "Manager — Business Incubation",
-        "description": "Reviews Sustainability & Capacity Building (startups) returns.",
+        "description": "Verifies BIC data: startups, spin-offs, startup funding and entrepreneurship events.",
         "is_system": True,
-        "pillars": ["SCB"],
+        "pillars": ["BIC"],
         "patterns": ORIC_STAFF,
     },
     {
-        "slug": "department_focal",
-        "name": "Department focal person",
-        "description": "Assign per department: checks that department's returns before ORIC review.",
+        "slug": "dean",
+        "name": "Dean",
+        "description": "Assign per faculty: sees, exports and submits on behalf of everyone in the faculty.",
         "is_system": True,
-        "patterns": [*FOUNDATION, "submission.view", "submission.review", "submission.export", "report.view",
-                     "dashboard.view_admin", "user.view"],
+        "patterns": LEADERSHIP,
+    },
+    {
+        "slug": "chairman",
+        "name": "Chairman / Co-Chair",
+        "description": "Assign per department: sees, exports and submits on behalf of department members.",
+        "is_system": True,
+        "patterns": LEADERSHIP,
     },
     {
         "slug": "faculty",
         "name": "Faculty member",
-        "description": "Files their own annual returns.",
+        "description": "Records their own activities.",
         "is_system": True,
         "patterns": [*FOUNDATION, "submission.add"],
     },
     {
         "slug": "auditor",
         "name": "Auditor / viewer",
-        "description": "Read-only access to returns, reports and the audit trail.",
+        "description": "Read-only access to submissions, reports, scorecard and the audit trail.",
         "is_system": True,
         "patterns": [*FOUNDATION, "submission.view", "submission.export", "report.*", "dashboard.view_admin",
-                     "user.view", "audit.view"],
+                     "scorecard.view", "institution_profile.view", "user.view", "audit.view", "import.view"],
     },
 ]

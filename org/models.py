@@ -2,11 +2,54 @@ from django.db import models
 from django.utils import timezone
 
 
+class Faculty(models.Model):
+    """A NED faculty (school) headed by a Dean, e.g. Faculty of Electrical & Computer Engineering."""
+
+    code = models.CharField(max_length=20, unique=True)
+    name = models.CharField(max_length=150, unique=True)
+    short_name = models.CharField(max_length=80, blank=True)
+    dean = models.ForeignKey("people.Person", null=True, blank=True, on_delete=models.SET_NULL,
+                             related_name="dean_of")
+    order = models.PositiveSmallIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order", "name"]
+        verbose_name_plural = "faculties"
+
+    def __str__(self):
+        return self.name
+
+
 class Department(models.Model):
     name = models.CharField(max_length=150, unique=True)
     code = models.CharField(max_length=20, unique=True)
-    faculty = models.CharField(max_length=150, blank=True, help_text="Faculty / school the department belongs to.")
+    faculty = models.ForeignKey(Faculty, null=True, blank=True, on_delete=models.PROTECT, related_name="departments")
+    chair = models.ForeignKey("people.Person", null=True, blank=True, on_delete=models.SET_NULL,
+                              related_name="chair_of")
+    co_chairs = models.ManyToManyField("people.Person", blank=True, related_name="co_chair_of")
+    website = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class Organization(models.Model):
+    """External body: funder, company, government department, MoU partner, licensee …
+
+    Free-text answers are normalised onto these rows (``aliases`` keeps every
+    spelling seen) so reports can group "HEC" / "Higher Education Commission".
+    """
+
+    name = models.CharField(max_length=255, unique=True)
+    kind = models.CharField(max_length=30, blank=True, help_text="funder, company, government, academic, ngo …")
+    country = models.CharField(max_length=80, blank=True)
+    aliases = models.JSONField(default=list, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["name"]
@@ -31,6 +74,10 @@ class ReportingCycle(models.Model):
     submission_deadline = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=10, choices=Status.choices, default=Status.DRAFT)
     notes = models.TextField(blank=True)
+    # Index-A denominators used by the scorecard (ratios are "per PhD faculty").
+    phd_faculty_count = models.PositiveIntegerField(null=True, blank=True)
+    sanctioned_faculty_posts = models.PositiveIntegerField(null=True, blank=True)
+    existing_faculty_count = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         ordering = ["-year"]
@@ -43,6 +90,12 @@ class ReportingCycle(models.Model):
         if self.status != self.Status.OPEN:
             return False
         return not self.submission_deadline or timezone.localdate() <= self.submission_deadline
+
+    @classmethod
+    def for_date(cls, d):
+        if not d:
+            return None
+        return cls.objects.filter(starts_on__lte=d, ends_on__gte=d).first()
 
     @classmethod
     def current(cls):

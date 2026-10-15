@@ -1,0 +1,550 @@
+email,full_name,designation,department_code,is_phd,employee_id,phone,aliases,email_source,source,photo
+asadkhan@neduet.edu.pk,Prof. Dr. Asad-ur-Rehman Khan,Meritorious Professor & Dean CPL,CED,1,,Ext. 2203,Dr. Asad-ur-Rehman Khan,scraped,website+excel,asadkhan.jpg
+ajsangi@neduet.edu.pk,Prof. Dr. Abdul Jabbar Sangi,Chairman,CED,1,,Ext. 2205,Abdul Jabbar Sangi;Dr. Abdul Jabbar Sangi,scraped,website+excel,
+srafeeqi@neduet.edu.pk,Prof. Dr. Sahibzada Farooq Ahmed Rafeeqi,Professor Emeritus,CED,1,,,,scraped,website,srafeeqi.jpg
+saroash@neduet.edu.pk,Prof. Dr. Sarosh Hashmat Lodi,Professor Emeritus,CED,1,,,Prof. Dr. Sarosh Hashmat Lodhi;Dr. Sarosh Hashmat Lodi,scraped,website+excel,saroash.jpg
+amanmuri@neduet.edu.pk,Prof. Dr. Amanullah Marri,Professor,CED,1,,Ext. 2613,,scraped,website,amanmuri.jpg
+fbatool@neduet.edu.pk,Prof. Dr. Farnaz Batool,Professor,CED,1,,Ext. 2620,Dr. Farnaz Batool,scraped,website+excel,fbatool.jpg
+farrukh@neduet.edu.pk,Prof. Dr. Farrukh Arif,Professor,CED,1,,Ext. 2277,Dr. Farrukh Arif,scraped,website+excel,farrukh.jpg
+sadaqatullah.khan@placeholder.neduet.edu.pk,Dr. Sadaqatullah Khan,Professor,CED,1,,,,placeholder,excel,
+sfareed@neduet.edu.pk,Prof. Dr. Shamsoon Fareed,Professor,CED,1,,Ext. 2722,Dr. Shamsoon Fareed,scraped,website+excel,sfareed.jpg
+imran.ahmed@placeholder.neduet.edu.pk,Dr. Syed Imran Ahmed,Professor,CED,1,,,,placeholder,excel,
+tehmina@neduet.edu.pk,Prof. Dr. Tehmina Ayub,Professor,CED,1,,Ext. 2683,,scraped,website,tehmina.jpg
+maslam@neduet.edu.pk,Dr. Aslam Faqeer Muhammad,Associate Professor,CED,1,,Ext. 2744,Dr. Aslam Faqeer Mohammad,scraped,website+excel,maslam.jpg
+hhasan@neduet.edu.pk,Dr. Haider Hasan,Associate Professor,CED,1,,Ext. 2617,,scraped,website,hhasan.jpg
+erum@neduet.edu.pk,Dr. Sadaf Qasim,Associate Professor,CED,1,,Ext. 2610,,scraped,website,erum.jpg
+bukhary@neduet.edu.pk,Dr. Syeda Saria Bukhary,Associate Professor,CED,1,,Ext. 2399,,scraped,website,
+arebasyed@cloud.neduet.edu.pk,Dr. Areba Syed,Assistant Professor,CED,1,,Ext. 2283,,scraped,website,arebasyed.jpg
+faizasaeed@neduet.edu.pk,Dr. Faiza Saeed,Assistant Professor,CED,1,,Ext. 2744,Engr. Faiza Saeed;Faiza Saeed,scraped,website+excel,faizasaeed.jpg
+farhansaleem@neduet.edu.pk,Dr. Farhan Saleem,Assistant Professor,CED,1,,Ext. 2399,,scraped,website,farhansaleem.jpg
+fatimak@neduet.edu.pk,Dr. Fatima Khalid,Assistant Professor,CED,1,,Ext. 2619,,scraped,website,fatimak.jpg
+fawwad@neduet.edu.pk,Dr. Fawwad Masood,Assistant Professor,CED,1,,Ext. 2399,,scraped,website,fawwad.jpg
+bhatti@neduet.edu.pk,Engr. Haris Akram Bhatti,Assistant Professor,CED,0,,Ext. 2399,Mr. Haris Akram Bhatti,scraped,website+excel,bhatti.jpg
+saadkhan@neduet.edu.pk,Dr. Muhammad Saad Khan,Assistant Professor,CED,1,,Ext. 2223,,scraped,website,saadkhan.jpg
+enawaz@cloud.neduet.edu.pk,Dr. Rana Rabnawaz Ahmed,Assistant Professor,CED,1,,Ext. 2749,Dr Rana Rabnawaz Ahmed;Dr. Rana Rab Nawaz Ahmed,scraped,website+excel,enawaz.jpg
+sadiamoin@neduet.edu.pk,Dr. Sadia Moin,Assistant Professor,CED,1,,Ext. 2617,,scraped,website,sadiamoin.jpg
+sajjad.ali@neduet.edu.pk,Dr. Sajjad Ali,Assistant Professor,CED,1,,Ext. 2747,,scraped,website,sajjad.ali.jpg
+shoaib@neduet.edu.pk,Engr. Shoaib Ahmed,Assistant Professor,CED,0,,,,scraped,website,shoaib.jpg
+syednoman@neduet.edu.pk,Engr. Syed Muhammad Noman,Assistant Professor,CED,0,,Ext. 2617,,scraped,website,syednoman.jpg
+muzammilabbas@cloud.neduet.edu.pk,Dr. Syed Muzammil Abbas Rizvi,Assistant Professor,CED,1,,Ext. 2749,,scraped,website,muzammilabbas.jpg
+ssalman@neduet.edu.pk,Dr. Syed Salman Mobeen,Assistant Professor,CED,1,,Ext. 2399,,scraped,website+excel,ssalman.jpg
+waleedahmedkhan@cloud.neduet.edu.pk,Dr. Waleed Ahmed Khan,Assistant Professor,CED,1,,Ext. 2748,,scraped,website,waleedahmedkhan.jpg
+adnanrais@neduet.edu.pk,Engr. Adnan Rais,Lecturer,CED,0,,Ext. 2753,,scraped,website,adnanrais.jpg
+ayeshaakram@neduet.edu.pk,Engr. Ayesha Akram,Lecturer,CED,0,,Ext. 2657,,scraped,website,ayeshaakram.jpg
+farhanjamil@neduet.edu.pk,Engr. Farhan Jamil,Lecturer,CED,0,,,,scraped,website,farhanjamil.jpg
+hamnahasan@neduet.edu.pk,Engr. Hamna Hasan,Lecturer,CED,0,,Ext. 2399,,scraped,website,
+juwairia@neduet.edu.pk,Engr. Juwairia Asad,Lecturer,CED,0,,Ext. 2619,,scraped,website,juwairia.jpg
+komalali@cloud.neduet.edu.pk,Engr. Komal Ali,Lecturer,CED,0,,Ext. 2617,,scraped,website,komalali.jpg
+msaadifrahim@cloud.neduet.edu.pk,Engr. Muhammad Saad Ifrahim,Lecturer,CED,0,,Ext. 2745,,scraped,website,msaadifrahim.jpg
+samasood@neduet.edu.pk,Engr. Samra Masood,Lecturer,CED,0,,Ext. 2713,,scraped,website+excel,samasood.jpg
+shoaib.akhter@cloud.neduet.edu.pk,Engr. Shoaib Akhter,Lecturer,CED,0,,Ext. 2744,,scraped,website,shoaib.akhter.jpg
+shoaib.sal@neduet.edu.pk,Engr. Shoaib Salman,Lecturer,CED,0,,Ext. 2617,,scraped,website,shoaib.sal.jpg
+syedahiba@neduet.edu.pk,Engr. Syeda Hiba Haider,Lecturer,CED,0,,Ext. 2657,,scraped,website,syedahiba.jpg
+tajikmustafa@neduet.edu.pk,Engr. Tajik Mustafa Shah,Lecturer,CED,0,,Ext. 2399,,scraped,website,tajikmustafa.jpg
+myousuf@neduet.edu.pk,Engr. Yousuf Iqbal,Lecturer,CED,0,,Ext. 2743,,scraped,website,myousuf.jpg
+shafqat.ejaz@placeholder.neduet.edu.pk,Dr. Muhammad Shafqat Ejaz,,CED,1,,,,placeholder,excel,
+adnan@neduet.edu.pk,Prof. Adnan Qadir,Professor / Chairman,UED,0,,Ext. 2354,Prof. Dr. Adnan Qadir,scraped,website+excel,adnan.jpg
+afzal.ahmed@placeholder.neduet.edu.pk,Dr. Afzal Ahmed,Co-Chairperson,UED,1,,,,placeholder,website,
+muhammadahmed@neduet.edu.pk,Dr. Muhammad Ahmed,Associate Professor / Co-Chairman,UED,1,,Ext. 2454,,scraped,website+excel,muhammadahmed.jpg
+aahmed@neduet.edu.pk,Dr. Ashar Ahmed,Associate Professor,UED,1,,Ext. 2451,,scraped,website+excel,aahmed.jpg
+msmadiha@neduet.edu.pk,Ms. Madiha,Assistant Professor,UED,0,,Ext. 2450,,scraped,website,msmadiha.jpg
+nazhar@neduet.edu.pk,Dr. Nida Azhar,Assistant Professor,UED,1,,Ext. 2696,,scraped,website+excel,nazhar.jpg
+fahadabdullah@neduet.edu.pk,Syed Muhammad Fahad Abdullah,Assistant Professor,UED,0,,Ext. 2659,,scraped,website,fahadabdullah.jpg
+madihazaidi@neduet.edu.pk,Syeda Madiha Zaidi,Assistant Professor,UED,0,,Ext. 2455,,scraped,website,madihazaidi.jpg
+aqsazahid@cloud.neduet.edu.pk,Ms. Aqsa Zahid,Lecturer,UED,0,,Ext. 2455,,scraped,website,aqsazahid.jpg
+ayeshaayub@neduet.edu.pk,Ms. Ayesha Ayub,Lecturer,UED,0,,Ext. 2374,,scraped,website,ayeshaayub.jpg
+bismah@cloud.neduet.edu.pk,Ms. Bisma Quadar,Lecturer,UED,0,,Ext. 2455,,scraped,website,
+masad@neduet.edu.pk,Mr. Mirza Asad Ullah Baig,Lecturer,UED,0,,Ext. 2551,Mirza Asad Ullah Baig,scraped,website+excel,masad.jpg
+hadiarzoo@cloud.neduet.edu.pk,Mr. Muhammad Hadi Arzoo,Lecturer,UED,0,,Ext. 2558,,scraped,website,hadiarzoo.jpg
+narmeen@neduet.edu.pk,Ms. Narmeen Tanweer Memon,Lecturer,UED,0,,Ext. 2696,,scraped,website,narmeen.jpg
+khanshahrukh@cloud.neduet.edu.pk,Mr. Shahrukh Khan,Lecturer,UED,0,,Ext. 2551,,scraped,website,khanshahrukh.jpg
+fareed.siddique@placeholder.neduet.edu.pk,Dr. Fareed Iqbal Siddique,Professor on PPL chair,PED,1,,,,placeholder,website,fareed.siddique.jpg
+shaine@neduet.edu.pk,Dr. Shaine Mohammadali Lalji,Acting Chairman / Associate Professor,PED,1,,,,scraped,website+excel,
+javedh@neduet.edu.pk,Prof. Dr. Engr. Javed Haneef,Professor,PED,1,,,Dr. Javed Haneef,scraped,website+excel,javedh.jpg
+adnanhq@neduet.edu.pk,Engr. Adnan ul Haq,Assistant Professor,PED,0,,,,scraped,website,
+engraftab@neduet.edu.pk,Dr. Aftab Hussain Arain,Assistant Professor,PED,1,,,,scraped,website,engraftab.jpg
+faizanali@neduet.edu.pk,Dr. Faizan Ali,Assistant Professor,PED,1,,,,scraped,website,faizanali.jpg
+nomankhan@neduet.edu.pk,Engr. Mohammad Noman Khan,Assistant Professor,PED,0,,,,scraped,website,nomankhan.jpg
+arqamkhan@neduet.edu.pk,Dr. Muhammad Arqam Khan,Assistant Professor,PED,1,,,,scraped,website,arqamkhan.jpg
+engrimran@neduet.edu.pk,Dr. Syed Imran Ali,Assistant Professor,PED,1,,,Engr. Syed Imran Ali,scraped,website+excel,engrimran.jpg
+mubarakali@cloud.neduet.edu.pk,Engr. Mubarak Ali,Lecturer,PED,0,,,,scraped,website,
+maqib@cloud.neduet.edu.pk,Engr. Muhammad Aqib,Lecturer,PED,0,,,,scraped,website,maqib.jpg
+mohsinyousufi@neduet.edu.pk,Engr. Muhammad Mohsin Yousufi,Lecturer,PED,0,,,,scraped,website,
+masood.rafi@placeholder.neduet.edu.pk,Prof. Muhammad Masood Rafi,Chairman,EQD,0,,,Prof. Dr. Muhammad Masood Rafi,placeholder,website+excel,
+rashid.khan@placeholder.neduet.edu.pk,Prof. Dr. Rashid Ahmed Khan,Professor,EQD,1,,,Dr. Rashid Ahmed Khan;RASHID AHMED KHAN,placeholder,website+excel,
+mukesh.kumar@placeholder.neduet.edu.pk,Dr. Mukesh Kumar,Associate Professor,EQD,1,,,,placeholder,website,
+atifm@neduet.edu.pk,Prof. Dr. Atif Mustafa,Professor and Chairman,END,1,,,Proof Atif Mustafa;Dr. Atif Mustafa,scraped,website+excel,atifm.jpg
+abdulghaffar@neduet.edu.pk,Prof. Dr. Abdul Ghaffar Memon,Professor,END,1,,,Dr Abdul Ghaffar;Dr. Abdul Ghaffar;Abdul Ghaffar;Dr. Abdul Ghaffar Memon,scraped,website+excel,abdulghaffar.jpg
+asif.shaikh@placeholder.neduet.edu.pk,Prof. Dr. Asif Ahmed Shaikh,Professor,END,1,,,Dr. Asif Ahmed Shaikh,placeholder,website+excel,asif.shaikh.jpg
+mehmood@neduet.edu.pk,Prof. Dr. Mehmood Ali,Professor,END,1,,,Dr. Mehmood Ali,scraped,website+excel,mehmood.jpg
+sadiakhan@neduet.edu.pk,Prof. Dr. Sadia Khan,Professor,END,1,,,Dr. Sadia Khan,scraped,website+excel,sadiakhan.jpg
+minzamumtaz@cloud.neduet.edu.pk,Engr. Minza Mumtaz,Lecturer,END,0,,,,scraped,website,minzamumtaz.jpg
+zohairhassan@cloud.neduet.edu.pk,Engr. Zohair Hassan Khan,Lecturer,END,0,,,,scraped,website,zohairhassan.jpg
+saadqazi@neduet.edu.pk,Prof. Dr. Saad Ahmed Qazi,Meritorious Professor & Dean ECE,EED,1,,Ext. 2390,Dr. Saad Ahmed Qazi,scraped,website+excel,saadqazi.jpg
+attakhawaja1970@gmail.com,Prof. Dr. Attaullah Khawaja,Chairman EED & Professor,EED,1,,Ext. 2207,Dr. Attaullah Khawaja,scraped,website+excel,
+mohsinaman@neduet.edu.pk,Prof. Dr. Muhammad Mohsin Aman,Co-Chairman & Professor,EED,1,,Ext. 2665,Dr. Muhammad Mohsin Aman;Dr. Mohsin Aman,scraped,website+excel,
+riazuddin@neduet.edu.pk,Prof. Dr. Riaz Uddin,Professor,EED,1,,Ext. 2232,Dr. Riaz Uddin;Riaz Uddin,scraped,website+excel,riazuddin.jpg
+ghani@neduet.edu.pk,Dr. Abdul Ghani Abro,Associate Professor,EED,1,,Ext. 2662,,scraped,website,ghani.jpg
+krishan.lal@neduet.edu.pk,Dr. Krishan Lal Khatri,Associate Professor,EED,1,,Ext. 2663,,scraped,website+excel,
+alimemon@neduet.edu.pk,Dr. Muhammad Ali Memon,Associate Professor,EED,1,,Ext. 2227,,scraped,website,alimemon.jpg
+rmlarik@neduet.edu.pk,Engr. Dr. Raja Masood Larik,Associate Professor,EED,1,,Ext. 2662,,scraped,website,rmlarik.jpg
+abdullah.munir@neduet.edu.pk,Dr. Abdullah Munir,Assistant Professor,EED,1,,Ext. 2207,Dr. Adullah Miunir,scraped,website+excel,abdullah.munir.jpg
+arjs@neduet.edu.pk,Dr. Abdurrahman Javid Shaikh,Assistant Professor,EED,1,,Ext. 2668,,scraped,website,arjs.jpg
+akhan@neduet.edu.pk,Ms. Arjumand Samad,Assistant Professor,EED,0,,Ext. 2664,,scraped,website,
+beenish@cloud.neduet.edu.pk,Dr. Beenish Sultana,Assistant Professor,EED,1,,Ext. 2305,,scraped,website,
+fezan@neduet.edu.pk,Dr. Fezan Rafique,Assistant Professor,EED,1,,Ext. 2214,Dr. Faizan Rafique,scraped,website+excel,fezan.jpg
+mohdali@neduet.edu.pk,Dr. Mirza Muhammad Ali Baig,Assistant Professor,EED,1,,Ext. 2668,,scraped,website+excel,mohdali.jpg
+hammad.uddin@neduet.edu.pk,Muhammad Hammad Uddin,Assistant Professor,EED,0,,Ext. 2207,,scraped,website,hammad.uddin.jpg
+hassanulhaq@neduet.edu.pk,Muhammad Hassan ul Haq,Assistant Professor,EED,0,,Ext. 2207,,scraped,website+excel,hassanulhaq.jpg
+mjaved@neduet.edu.pk,Dr. Muhammad Javed,Assistant Professor,EED,1,,Ext. 2687,,scraped,website,
+musajid@neduet.edu.pk,Muhammad Umar Sajid,Assistant Professor,EED,0,,Ext. 2214,,scraped,website,
+shahnaz@neduet.edu.pk,Ms. Shahnaz Tabassum,Assistant Professor,EED,0,,Ext. 2661,,scraped,website,
+shariq.shaikh@hotmail.com,Shariq Shaikh,Assistant Professor,EED,0,,Ext. 2667,,scraped,website,shariq.shaikh.jpg
+shoaibned97@gmail.com,Shoaib Siddiqui,Assistant Professor,EED,0,,Ext. 2663,,scraped,website,shoaibned97.jpg
+siqara@neduet.edu.pk,Dr. Umbrin Sultana,Assistant Professor,EED,1,,Ext. 2305,,scraped,website+excel,
+aimannajeeb27@gmail.com,Ms. Aiman Najeeb,Lecturer,EED,0,,Ext. 2666,,scraped,website+excel,
+areebakanwal@neduet.edu.pk,Ms. Areeba Kanwal,Lecturer,EED,0,,Ext. 2207,,scraped,website,
+asad.shaikh@placeholder.neduet.edu.pk,Asad Shaikh,Lecturer,EED,0,,Ext. 2207,,placeholder,website,asad.shaikh.jpg
+asifzahoorshaikh@gmail.com,Asif Zahoor,Lecturer,EED,0,,Ext. 2207,,scraped,website,asifzahoorshaikh.jpg
+ayeshakhan@neduet.edu.pk,Ms. Ayesha Khan,Lecturer,EED,0,,Ext. 2664,Aaisha Khan,scraped,website+excel,
+ayeshasaeed@neduet.edu.pk,Ms. Ayesha Saeed,Lecturer,EED,0,,Ext. 2207,,scraped,website,
+farah.siddiqui@placeholder.neduet.edu.pk,Farah Andaleeb Siddiqui,"Lecturer, Class Advisor (FE)",EED,0,,Ext. 2207,,placeholder,website,
+hmfurqan@neduet.edu.pk,Hafiz Muhammad Furqan,"Lecturer, Area Coordinator (AC-ISO)",EED,0,,Ext. 2667,,scraped,website,
+hafsaw@neduet.edu.pk,Ms. Hafsa Wahid,Lecturer,EED,0,,Ext. 2207,,scraped,website,
+hareem.khan@placeholder.neduet.edu.pk,Ms. Hareem Khan,Lecturer,EED,0,,Ext. 2207,,placeholder,website,
+muhammadarshad@neduet.edu.pk,Muhammad Arshad,Lecturer,EED,0,,Ext. 2207,,scraped,website,muhammadarshad.jpg
+mirfan@neduet.edu.pk,Muhammad Irfan Shaikh,Lecturer,EED,0,,Ext. 2207,,scraped,website,
+muhammad.omar@neduet.edu.pk,Muhammad Omar,Lecturer,EED,0,,Ext. 2667,Mr. Muhammad Omar,scraped,website+excel,
+uzairkhan@neduet.edu.pk,Muhammad Uzair Khan,Lecturer,EED,0,,Ext. 2687,,scraped,website,
+nabeelfayyaz@neduet.edu.pk,Nabeel Fayyaz,Lecturer,EED,0,,Ext. 2666,,scraped,website,
+najianaveed@neduet.edu.pk,Ms. Najia Qaiser,Lecturer,EED,0,,Ext. 2664,Najia Naveed,scraped,website+excel,
+nimra.malik@placeholder.neduet.edu.pk,Ms. Nimra Riaz Malik,Lecturer,EED,0,,Ext. 2207,Nimra Riaz Malik,placeholder,website+excel,
+rabbia.qasmi@placeholder.neduet.edu.pk,Ms. Rabbia Muhammad Qasmi,Lecturer,EED,0,,Ext. 2207,,placeholder,website,
+rashidhussain@neduet.edu.pk,Syed Muhammad Rashid Hussain,Lecturer,EED,0,,Ext. 2667,,scraped,website,
+tabassum.irfan@placeholder.neduet.edu.pk,Ms. Tabassum Irfan,Lecturer,EED,0,,Ext. 2207,,placeholder,website,
+uroojyasim@gmail.com,Ms. Urooj Faiz,"Lecturer, Class Advisor (SE)",EED,0,,Ext. 2207,,scraped,website,
+uzma@neduet.edu.pk,Ms. Uzma Perveen,Lecturer,EED,0,,Ext. 2305,,scraped,website,
+waqar.sarang@placeholder.neduet.edu.pk,Waqar Ali Alias Sarang,Lecturer,EED,0,,Ext. 2207,,placeholder,website,waqar.sarang.jpg
+smuniza@neduet.edu.pk,Prof. Dr. Sadia Muniza Faraz,Professor & Chairperson,ELD,1,,,Dr. Sadia Muniza Faraz,scraped,website+excel,
+hashim@neduet.edu.pk,Prof. Dr. Hashim Raza Khan,Professor & Co-Chairperson,ELD,1,,,Dr. Hashim Raza Khan;Hashim Raza Khan,scraped,website+excel,
+ghous.narejo@placeholder.neduet.edu.pk,Dr. Ghous Bakhsh Narejo,Professor,ELD,1,,,Dr Ghous Baksh Narejo;Dr. Ghous Baksh Narejo,placeholder,excel,
+aamna@cloud.neduet.edu.pk,Dr. Amna Shabbir,Associate Professor,ELD,1,,,,scraped,website+excel,aamna.jpg
+faizanshirazi@neduet.edu.pk,Dr. Muhammad Faizan Shirazi,Associate Professor,ELD,1,,,Faizan Shirazi;Dr. Faizan Sherazi,scraped,website+excel,faizanshirazi.jpg
+sjaved@cloud.neduet.edu.pk,Dr. Saba Javed,Associate Professor,ELD,1,,,,scraped,website,sjaved.jpg
+riazun1036@neduet.edu.pk,Dr. Syed Riaz un Nabi Jafri,Associate Professor,ELD,1,,,Prof. Dr. Riaz-Un-Nabi Jafri;Dr. Riaz un Nabi Jafri,scraped,website+excel,riazun1036.jpg
+madiha@neduet.edu.pk,Dr. Madiha Shabir Shaikh,Assistant Professor,ELD,1,,,,scraped,website,madiha.jpg
+saleha@neduet.edu.pk,Dr. Saleha Bano,Assistant Professor,ELD,1,,,,scraped,website,saleha.jpg
+sana@neduet.edu.pk,Dr. Sana Arshad,Assistant Professor,ELD,1,,,,scraped,website+excel,sana.jpg
+siddiqi@neduet.edu.pk,Dr. Shahzad Siddiqi,Assistant Professor,ELD,1,,,,scraped,website,siddiqi.jpg
+tariqrehman@neduet.edu.pk,Dr. Tariq Rehman,Assistant Professor,ELD,1,,,,scraped,website+excel,tariqrehman.jpg
+wakeel.shah@placeholder.neduet.edu.pk,Dr. Wakeel Shah,Assistant Professor,ELD,1,,,,placeholder,website,wakeel.shah.jpg
+yawar.rehman@placeholder.neduet.edu.pk,Dr. Yawar Rehman,Assistant Professor,ELD,1,,,,placeholder,excel,
+arhamiqbal@neduet.edu.pk,Ms. Arham Iqbal,Lecturer,ELD,0,,,,scraped,website+excel,arhamiqbal.jpg
+ayesha.akhtar@placeholder.neduet.edu.pk,Miss Ayesha Akhtar,Lecturer,ELD,0,,,,placeholder,excel,
+feehaareej@neduet.edu.pk,Ms. Feeha Areej,Lecturer,ELD,0,,,,scraped,website,feehaareej.jpg
+hafsa.amanullah94@gmail.com,Ms. Hafsa Amanullah,Lecturer,ELD,0,,,,scraped,website+excel,hafsa.amanullah94.jpg
+hiraimtiaz@neduet.edu.pk,Ms. Hira Imtiyaz,Lecturer,ELD,0,,,,scraped,website,hiraimtiaz.jpg
+maheen@neduet.edu.pk,Ms. Maheen Mazhar,Lecturer,ELD,0,,,,scraped,website+excel,maheen.jpg
+mariyumjamshid@cloud.neduet.edu.pk,Ms. Mariyum Jamshid,Lecturer,ELD,0,,,,scraped,website,mariyumjamshid.jpg
+nasir@neduet.edu.pk,Mr. Muhammad Nasir,Lecturer,ELD,0,,,,scraped,website,nasir.jpg
+rabiawk88@neduet.edu.pk,Ms. Rabia Waheed Khwaja,Lecturer,ELD,0,,,,scraped,website,rabiawk88.jpg
+sabaahmed@neduet.edu.pk,Ms. Saba Fakhar,Lecturer,ELD,0,,,,scraped,website,sabaahmed.jpg
+sidrarehman@neduet.edu.pk,Ms. Sidra Rahman,Lecturer,ELD,0,,,,scraped,website+excel,sidrarehman.jpg
+soniya.shafi@placeholder.neduet.edu.pk,Ms. Soniya Shafi,Lecturer,ELD,0,,,,placeholder,website,soniya.shafi.jpg
+iaslam@neduet.edu.pk,Prof. Dr. Muhammad Imran Aslam,Professor & Chairman,TCD,1,,Ext. 2670,Muhammad Imran Aslam;Dr. Muhammad Imran Aslam;M. Imran Aslam,scraped,website+excel,iaslam.jpg
+irfans@neduet.edu.pk,Prof. Dr. Irfan Ahmed,Professor,TCD,1,,Ext. 2670,Dr. Irfan Ahmed,scraped,website+excel,irfans.jpg
+aamirzeb@neduet.edu.pk,Dr. Aamir Zeb,Associate Professor,TCD,1,,Ext. 2671,Dr. Amir Zeb,scraped,website+excel,aamirzeb.jpg
+rizwan.aslam@neduet.edu.pk,Dr. Rizwan Aslam Butt,Associate Professor,TCD,1,,Ext. 2688,Rizwan Aslam Butt,scraped,website+excel,
+sundus@neduet.edu.pk,Dr. Sundus Ali,Associate Professor,TCD,1,,Ext. 2692,Dr Sundus Ali,scraped,website+excel,sundus.jpg
+hiramariam@neduet.edu.pk,Dr. Hira Mariam,Assistant Professor,TCD,1,,Ext. 2690,,scraped,website,hiramariam.jpg
+komal.masroor@placeholder.neduet.edu.pk,Dr. Komal Masroor,Assistant Professor,TCD,1,,,,placeholder,excel,
+mfahim@neduet.edu.pk,Dr. Muhammad Fahim ul Haque,Assistant Professor,TCD,1,,Ext. 2672,Dr. Muhammad Fahim ul Haq;Muhammad Fahim Ul Haque,scraped,website+excel,mfahim.jpg
+nida@cloud.neduet.edu.pk,Dr. Nida Nasir,Assistant Professor,TCD,1,,Ext. 2231,,scraped,website,
+sabaa@neduet.edu.pk,Dr. Saba Ahmed,Assistant Professor,TCD,1,,Ext. 2689,Saba Ahmed,scraped,website+excel,sabaa.jpg
+talibsyed@neduet.edu.pk,Dr. Syed Talib Abbas Jafri,Assistant Professor,TCD,1,,Ext. 2670,,scraped,website,talibsyed.jpg
+tmalik@neduet.edu.pk,Dr. Tahir Malik,Assistant Professor,TCD,1,,Ext. 2672,,scraped,website+excel,tmalik.jpg
+uafsheen@neduet.edu.pk,Dr. Uzma Afsheen,Assistant Professor,TCD,1,,Ext. 2692,Dr Azma Afsheen,scraped,website+excel,uafsheen.jpg
+fatimamuhammad@neduet.edu.pk,Ms. Fatima Muhammad Saleem,Lecturer,TCD,0,,Ext. 2689,,scraped,website,
+fizza.gulham@placeholder.neduet.edu.pk,Ms. Fizza Gulham,Lecturer,TCD,0,,,,placeholder,excel,
+ghulamfiza@neduet.edu.pk,Ms. Ghulam Fiza,Lecturer,TCD,0,,Ext. 2689,Ghulam Fiza,scraped,website+excel,
+muneeb@neduet.edu.pk,Mr. Syed Muneeb Ahmed,Lecturer,TCD,0,,Ext. 2688,,scraped,website,muneeb.jpg
+danish.khan@placeholder.neduet.edu.pk,Dr. Danish Mahmood Khan,,TCD,1,,,,placeholder,excel,
+maismail@neduet.edu.pk,Dr. Muhammad Ali Ismail,"Chairperson , Professor",CIS,1,,,Prof. Dr. Muhammad Ali Ismail;Dr. Ali Ismail,scraped,website+excel,maismail.jpg
+majida.kazmi@placeholder.neduet.edu.pk,Dr. Majida Kazmi,Professor,CIS,1,,,Majida Kazmi,placeholder,website+excel,majida.kazmi.jpg
+arfeen@neduet.edu.pk,Dr. Muhammad Asad Arfeen,"Professor, Scientific Director, NCCS, Project Director, NED Technology Park, Ag. Director IT",CIS,1,,,Dr. Asad Arfeen;Mr. Muhammad Asad Arfeen,scraped,website+excel,arfeen.jpg
+muhammad.khurram@placeholder.neduet.edu.pk,Dr. Muhammad Khurram,"Professor, OBE Coordinator",CIS,1,,,,placeholder,website+excel,muhammad.khurram.jpg
+mariaw@neduet.edu.pk,Dr. Maria Waqas,Associate Professor,CIS,1,,,,scraped,website+excel,mariaw.jpg
+shehzad.hasan@placeholder.neduet.edu.pk,Dr. Shehzad Hasan,Associate Professor,CIS,1,,,,placeholder,website,shehzad.hasan.jpg
+anita.ali@placeholder.neduet.edu.pk,Ms. Anita Ali,"Assistant Professor, Labs Coordinator",CIS,0,,,,placeholder,website,anita.ali.jpg
+fakhraaftab@cloud.neduet.edu.pk,Dr. Fakhra Aftab,"Assistant Professor, Internship Coordinator",CIS,1,,,Ms. Fakhra Aftab,scraped,website+excel,fakhraaftab.jpg
+fyasir@neduet.edu.pk,Dr. Fauzia Yasir,Assistant Professor,CIS,1,,,Ms. Fauzia Yasir,scraped,website+excel,
+gul.ujjan@placeholder.neduet.edu.pk,Dr. Gul Munir Ujjan,Assistant Professor,CIS,1,,,,placeholder,website,gul.ujjan.jpg
+hameeza.ahmed@placeholder.neduet.edu.pk,Dr. Hameeza Ahmed,"Assistant Professor, FYDP Coordinator",CIS,1,,,,placeholder,website,hameeza.ahmed.jpg
+hina.khan@placeholder.neduet.edu.pk,Ms. Hina Danish Khan,Assistant Professor,CIS,0,,,,placeholder,website,hina.khan.jpg
+kashifasrar@neduet.edu.pk,Dr. Kashif Asrar,Assistant Professor,CIS,1,,,,scraped,website,kashifasrar.jpg
+syedaramish@neduet.edu.pk,Dr. Ramish Fatima,Assistant Professor,CIS,1,,,,scraped,website,syedaramish.jpg
+saad.khan@placeholder.neduet.edu.pk,Dr. Saad Qasim Khan,Assistant Professor,CIS,1,,,,placeholder,website,saad.khan.jpg
+stahzeeb@neduet.edu.pk,Dr. Shahab Tahzeeb,Assistant Professor,CIS,1,,,Dr Shahab Tahzeeb,scraped,website+excel,stahzeeb.jpg
+sumayya.zafar@placeholder.neduet.edu.pk,Dr. Sumayya Zafar,Assistant Professor,CIS,1,,,Ms. Sumayya Zafar,placeholder,website+excel,sumayya.zafar.jpg
+aqeel.haider@placeholder.neduet.edu.pk,Dr. Syed Aqeel Haider,Assistant Professor,CIS,1,,,,placeholder,website+excel,aqeel.haider.jpg
+zafarqas@neduet.edu.pk,Dr. Syed Zaffar Qasim,"Assistant Professor, Postgraduate Coordinator",CIS,1,,,,scraped,website+excel,zafarqas.jpg
+umar_iftikhar@outlook.com,Dr. Umar Iftikhar,Assistant Professor,CIS,1,,,,scraped,website,
+uroojain@neduet.edu.pk,Dr. Urooj Ainuddin,"Assistant Professor, Undergraduate Coordinator",CIS,1,,,,scraped,website+excel,
+zareen@neduet.edu.pk,Dr. Zareen Sadiq,"Assistant Professor, Area Coordinator",CIS,1,,,Dr Zareen Sadiq,scraped,website+excel,zareen.jpg
+ibsharishrat@neduet.edu.pk,Ms. Ibshar Ishrat,"Lecturer, Website Content Manager",CIS,0,,,,scraped,website,ibsharishrat.jpg
+mahnoormalik@neduet.edu.pk,Ms. Mahnoor Malik,Lecturer,CIS,0,,,,scraped,website,mahnoormalik.jpg
+mehwishraza@neduet.edu.pk,Ms. Mehwish Raza,Lecturer,CIS,0,,,Mehwish Raza,scraped,website+excel,
+ali.akhtar@placeholder.neduet.edu.pk,Mr. Muhammad Ali Akhtar,"Lecturer, Classroom Coordinator",CIS,0,,,Mr. Muhammad Ali Akhter,placeholder,website+excel,ali.akhtar.jpg
+nabeel.ibrahim@placeholder.neduet.edu.pk,Mr. Muhammad Nabeel Ibrahim,Lecturer,CIS,0,,,,placeholder,website,nabeel.ibrahim.jpg
+tahreemkhan@neduet.edu.pk,Ms. Tahreem Khan,Lecturer,CIS,0,,Ext. 2287,,scraped,website,tahreemkhan.jpg
+dreraj@neduet.edu.pk,Prof. Dr. Eraj Humayun Mirza,Chairperson & Professor,BMD,1,,,Dr. Engr. Eraj Humayun Mirza;Dr. Eraj Humayun Mirza;Eraj Humayun Mirza,scraped,website+excel,dreraj.jpg
+abulhasan@neduet.edu.pk,Prof. Dr. Engr. Muhammad Abul Hasan,Co-Chairperson & Professor,BMD,1,,,Dr. Muhammad Abul Hasan;Dr. Muhammad Abul Hassan;Muhammad Abul Hasan;Dr Muhammad Abul Hasan,scraped,website+excel,abulhasan.jpg
+farzana.yasmin@placeholder.neduet.edu.pk,Dr. Farzana Yasmin,Professor,BMD,1,,,,placeholder,excel,
+danishmujib@neduet.edu.pk,Dr. Muhammad Danish Mujib,Associate Professor,BMD,1,,,Dr. Muhammad Danish Mujeeb;Muhammad Danish Mujeeb;Muhammad Danish Mujib,scraped,website+excel,danishmujib.jpg
+farazjawed@neduet.edu.pk,Dr. Syed Faraz Jawed,Associate Professor,BMD,1,,,Dr. Syed Faraz Javed;Dr Syed Faraz Javed,scraped,website+excel,
+ahmed.rao@placeholder.neduet.edu.pk,Dr. Ahmed Zahid Rao,Assistant Professor,BMD,1,,,Dr. Ahmad Zahid Rao,placeholder,excel,
+bilal.usmani@placeholder.neduet.edu.pk,Dr. Bilal Ahmed Usmani,Assistant Professor,BMD,1,,,Dr Bilal Ahmed Usmani,placeholder,excel,
+faizan.shirazi@placeholder.neduet.edu.pk,Dr. Faizan Shirazi,Assistant Professor,BMD,1,,,,placeholder,excel,
+madeehaoz@neduet.edu.pk,Dr. Madeeha Sadia,Assistant Professor,BMD,1,,,,scraped,website+excel,madeehaoz.jpg
+rhnkouser@neduet.edu.pk,Ms. Rehana Kousar,Assistant Professor,BMD,0,,,,scraped,website,rhnkouser.jpg
+riazu@neduet.edu.pk,Mr. Riaz Uddin,Assistant Professor,BMD,0,,,,scraped,website,
+ssoomro@neduet.edu.pk,Dr. Saima Kashif,Assistant Professor,BMD,1,,,,scraped,website+excel,ssoomro.jpg
+drsmwasim@neduet.edu.pk,Dr. Syed. M. Wasim Raza,Assistant Professor,BMD,1,,,,scraped,website,drsmwasim.jpg
+engr.tajwar@neduet.edu.pk,Dr. Tajwar Sultana,Assistant Professor,BMD,1,,,,scraped,website,
+amnasethi@neduet.edu.pk,Ms. Amna Amin Sethi,Lecturer,BMD,0,,,,scraped,website,amnasethi.jpg
+farihashabbir@cloud.neduet.edu.pk,Engr. Fariha Shabbir,Lecturer,BMD,0,,,,scraped,website,farihashabbir.jpg
+fizzazia@neduet.edu.pk,Ms. Fizza Zia Shaikh,Lecturer,BMD,0,,,Engr. Fizza Zia Shaikh;Ms. Fizza Zia Sheikh,scraped,website+excel,fizzazia.jpg
+madihahaleem@neduet.edu.pk,Ms. Madiha Haleem,Lecturer,BMD,0,,,,scraped,website,
+ansub@cloud.neduet.edu.pk,Engr. Muhammad Ansub,Lecturer,BMD,0,,,,scraped,website,ansub.jpg
+mustafain.ali@placeholder.neduet.edu.pk,Mr. Mustafain Ali,Lecturer,BMD,0,,,,placeholder,excel,
+nafiakurd@neduet.edu.pk,Ms. Nafia Jawaid Kurd,Lecturer,BMD,0,,,Engr. Nafia Jawaid Kurd,scraped,website+excel,
+nayabmubashir@neduet.edu.pk,Ms. Nayab Mubashir,Lecturer,BMD,0,,,,scraped,website,nayabmubashir.jpg
+syedhasansarwar@cloud.neduet.edu.pk,Engr. Syed Hassan Sarwar,Lecturer,BMD,0,,,,scraped,website,syedhasansarwar.jpg
+mmkhan@cloud.neduet.edu.pk,Prof. Dr. Muhammad Mubashir Khan,Chairman,CSIT,1,,Ext. 2399,Dr. Muhammad Mubashir Khan,scraped,website+excel,
+shariq@cloud.neduet.edu.pk,Prof. Dr. Shariq Mahmood Khan,Co-Chairman,CSIT,1,,Ext. 2385,Dr. Shariq Mahmood Khan,scraped,website+excel,
+najeed.khan@placeholder.neduet.edu.pk,Dr. Najeed Ahmed Khan,Professor,CSIT,1,,,,placeholder,excel,
+rahmed@neduet.edu.pk,Engr. Prof. Dr. Raheela Asif,Professor,CSIT,1,,Ext. 2703,Dr. Raheela Asif;Dr Raheela Asif,scraped,website+excel,
+mandleeb@neduet.edu.pk,Engr. Dr. Maria Andleeb Siddiqui,Associate Professor,CSIT,1,,Ext. 2399,Dr. Maria Andleeb Siddiqui,scraped,website+excel,
+umer@cloud.neduet.edu.pk,Dr. Muhammad Umer Farooq,Associate Professor,CSIT,1,,Ext. 2633,Dr. MUHAMMAD UMER FAROOQ;Dr Umer Farooq,scraped,website+excel,umer.jpg
+marvi@cloud.neduet.edu.pk,Dr. Murk Marvi,Associate Professor,CSIT,1,,Ext. 2399,,scraped,website,marvi.jpg
+usmanamjad@neduet.edu.pk,Dr. Usman Amjad,Associate Professor,CSIT,1,,Ext. 2399,,scraped,website+excel,usmanamjad.jpg
+waseemu@neduet.edu.pk,Dr. Waseemullah,Associate Professor,CSIT,1,,Ext. 2633,,scraped,website,
+karimkazi@neduet.edu.pk,Dr. Abdul Karim Kazi,Assistant Professor,CSIT,1,,Ext. 2399,,scraped,website+excel,karimkazi.jpg
+hmimran@neduet.edu.pk,Dr. Muhammad Imran,Assistant Professor,CSIT,1,,Ext. 2569,,scraped,website,hmimran.jpg
+kamran@neduet.edu.pk,Dr. Muhammad Kamran,Assistant Professor,CSIT,1,,Ext. 2569,,scraped,website+excel,kamran.jpg
+saba@neduet.edu.pk,Ms. Saba Izhar Haque,Assistant Professor,CSIT,0,,Ext. 2399,,scraped,website,
+amnaahmed@cloud.neduet.edu.pk,Ms. Amna Ahmed,Lecturer,CSIT,0,,Ext. 2568,,scraped,website,amnaahmed.jpg
+duaagha98@gmail.com,Ms. Dua Agha,Lecturer,CSIT,0,,Ext. 2568,,scraped,website,duaagha98.jpg
+dureshahwar@cloud.neduet.edu.pk,Ms. Dureshahwar Waseem,Lecturer,CSIT,0,,Ext. 2568,,scraped,website,dureshahwar.jpg
+firdousriaz@cloud.neduet.edu.pk,Engr. Firdous Riaz,Lecturer,CSIT,0,,Ext. 2548,,scraped,website,firdousriaz.jpg
+fessani@neduet.edu.pk,Mr. Furqan Hussain Essani,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,fessani.jpg
+hamnahumar789@gmail.com,Ms. Hamnah Rashid,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,hamnahumar789.jpg
+humatabassum@neduet.edu.pk,Ms. Huma Tabassum,Lecturer,CSIT,0,,Ext. 2568,Huma Tabassum,scraped,website+excel,
+mahamashraf820@gmail.com,Ms. Maham Ashraf,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,mahamashraf820.jpg
+meharfatima@neduet.edu.pk,Ms. Mehar Fatima,Lecturer,CSIT,0,,Ext. 2399,,scraped,website,
+mzaki@cloud.neduet.edu.pk,Mr. Muhammad Ahmed Zaki Shaikh,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,mzaki.jpg
+arsalansaleem@neduet.edu.pk,Mr. Muhammad Arsalan,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,arsalansaleem.jpg
+hammad@cloud.neduet.edu.pk,Muhammad Hammad,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,
+wajhiuddin@cloud.neduet.edu.pk,Muhammad Wajhiuddin,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,wajhiuddin.jpg
+wasiqnoor@neduet.edu.pk,Muhammad Wasiq Noor,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,wasiqnoor.jpg
+rohailqamar@cloud.neduet.edu.pk,Mr. Rohail Qamar,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,rohailqamar.jpg
+saadia@cloud.neduet.edu.pk,Ms. Saadia Arshad,Lecturer,CSIT,0,,Ext. 2568,,scraped,website,saadia.jpg
+samia_masood@cloud.neduet.edu.pk,Ms. Samia Masood Awan,Lecturer,CSIT,0,,Ext. 2568,Samia Masood Awan,scraped,website+excel,samia_masood.jpg
+sahar.fatima3343@gmail.com,Sayyda Sahar Fatima,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,sahar.fatima3343.jpg
+shizamughal01@gmail.com,Ms. Shiza Hassan,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,shizamughal01.jpg
+mudassir.ahmed99398@neduet.edu.pk,Syed Mudassir Ahmed,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,
+toobashaikh@neduet.edu.pk,Ms. Tooba Shaikh,Lecturer,CSIT,0,,Ext. 2569,,scraped,website,
+shehnilaz@neduet.edu.pk,Engr. Prof. Dr. Shehnila Zardari,Chairperson,SWE,1,,Ext. 2564,Prof. Dr. Shehnila Zardari;Dr. Shehnila Zardari;Shehnila Zardari,scraped,website+excel,
+kashifmehboobkhan@neduet.edu.pk,Engr. Dr. Kashif Mehboob Khan,Associate Professor,SWE,1,,Ext. 2399,,scraped,website,
+farazh@neduet.edu.pk,Engr. Dr. Muhammad Faraz Hyder,Associate Professor,SWE,1,,Ext. 2387,Dr. Muhammad Faraz Hyder,scraped,website+excel,
+asmakhan@cloud.neduet.edu.pk,Engr. Asma Khan,Assistant Professor,SWE,0,,Ext. 2399,Ms. Asma Khan,scraped,website+excel,
+mustafa@neduet.edu.pk,Engr. Dr. Mustafa Latif,Assistant Professor,SWE,1,,Ext. 2566,,scraped,website,
+shumailaashfaq@neduet.edu.pk,Dr. Shumaila Ashfaq,Assistant Professor,SWE,1,,Ext. 2399,Engr. Shumaila Ashfaq,scraped,website+excel,
+simranajm@neduet.edu.pk,Engr. Simra Najm,Assistant Professor,SWE,0,,Ext. 2399,Engr Simra Najm,scraped,website+excel,
+sheraz@neduet.edu.pk,Engr. Dr. Syed Muhammad Sheraz,Assistant Professor,SWE,1,,Ext. 2566,,scraped,website,
+aliya.akhtar@placeholder.neduet.edu.pk,Ms. Aliya Akhtar,Lecturer,SWE,0,,Ext. 2399,,placeholder,website,
+aminah.akhtar@placeholder.neduet.edu.pk,Engr. Aminah Akhtar,Lecturer,SWE,0,,Ext. 2399,,placeholder,website,
+naveerasami@cloud.neduet.edu.pk,Engr. Naveera Sami,Lecturer,SWE,0,,Ext. 2569,,scraped,website,
+rehana.tabasum@placeholder.neduet.edu.pk,Ms. Rehana Tabasum,Lecturer,SWE,0,,Ext. 2399,,placeholder,website,
+ruqqiyaasad@cloud.neduet.edu.pk,Engr. Ruqqiya Asad,Lecturer,SWE,0,,Ext. 2399,,scraped,website,
+sanafatima@cloud.neduet.edu.pk,Ms. Sana Fatima,Lecturer,SWE,0,,Ext. 2399,,scraped,website,
+sheerinakhattak@cloud.neduet.edu.pk,Engr. Sheerina Khattak,Lecturer,SWE,0,,Ext. 2569,Ms. Sheerina Khattak,scraped,website+excel,
+shiza.memon@placeholder.neduet.edu.pk,Ms. Shiza Riaz Memon,Lecturer,SWE,0,,,,placeholder,excel,
+sid_sapphire@cloud.neduet.edu.pk,Engr. Ms. Sidra,Lecturer,SWE,0,,Ext. 2399,,scraped,website,
+tooba.siddiqui@placeholder.neduet.edu.pk,Engr. Tooba Siddiqui,Lecturer,SWE,0,,Ext. 2399,,placeholder,website,
+veena.kumari@placeholder.neduet.edu.pk,Engr. Veena Kumari,Lecturer,SWE,0,,Ext. 2399,,placeholder,website,
+wajeeha.shafiq@placeholder.neduet.edu.pk,Ms. Wajeeha Shafiq,Lecturer,SWE,0,,Ext. 2399,,placeholder,website,
+zainab.fatima@placeholder.neduet.edu.pk,Ms. Zainab Fatima,Lecturer,SWE,0,,Ext. 2399,,placeholder,website+excel,
+sh.usmani@placeholder.neduet.edu.pk,Dr. Sh. M. Wahabuddin Usmani,,SWE,1,,,,placeholder,excel,
+samir@neduet.edu.pk,Prof. Dr. Syed Amir Iqbal,Professor & Dean MME,MED,1,,Ext. 2329,,scraped,website,
+mubashir@neduet.edu.pk,Dr. Mubashir Ali Siddiqui,Chairman,MED,1,,Ext. 2206,,scraped,website+excel,
+haider.ali@neduet.edu.pk,Dr. Haider Ali,Professor,MED,1,,Ext. 2632,,scraped,website+excel,haider.ali.jpg
+mshakaib@neduet.edu.pk,Dr. Muhammad Shakaib,Professor,MED,1,,Ext. 2334,Prof. Dr. Muhammad Shakaib,scraped,website+excel,mshakaib.jpg
+uzair@neduet.edu.pk,Dr. Muhammad Uzair,Professor,MED,1,,Ext. 2315,Prof. Muhammad Uzair,scraped,website+excel,uzair.jpg
+drmurtuza@neduet.edu.pk,Dr. Murtuza,Professor,MED,1,,Ext. 2330,Dr. Murtaza Mehdi,scraped,website+excel,drmurtuza.jpg
+nasiruddin@neduet.edu.pk,Dr. Nasir Uddin Shaikh,Professor,MED,1,,Ext. 2630,,scraped,website,nasiruddin.jpg
+usman.allauddin@neduet.edu.pk,Dr.-Ing Usman Allauddin,Professor,MED,1,,Ext. 2315,Dr. Ing. Usman Allauddin;Dr.-Ing. Usman Allauddin,scraped,website+excel,usman.allauddin.jpg
+muzamil@neduet.edu.pk,Dr. Muhammad Muzamil,Associate Professor,MED,1,,,,scraped,website+excel,muzamil.jpg
+tariqjamil@neduet.edu.pk,Dr. Tariq Jamil,Associate Professor,MED,1,,Ext. 2315,Dr Tariq Jamil,scraped,website+excel,
+abdulghafar@neduet.edu.pk,Dr. Abdul Ghafar,Assistant Professor,MED,1,,Ext. 2694,,scraped,website,abdulghafar.jpg
+abdulqadir@neduet.edu.pk,Dr. Abdul Qadir Ahmed,Assistant Professor,MED,1,,Ext. 2631,,scraped,website,abdulqadir.jpg
+adeelahmedk@neduet.edu.pk,Dr. Adeel Ahmed Khan,Assistant Professor,MED,1,,Ext. 2348,,scraped,website,adeelahmedk.jpg
+amber@neduet.edu.pk,Ms. Amber Fishan Zafar,Assistant Professor,MED,0,,,,scraped,website,amber.jpg
+aun@neduet.edu.pk,Dr. Aun Ali,Assistant Professor,MED,1,,Ext. 2334,,scraped,website,aun.jpg
+erumkh@neduet.edu.pk,Ms. Erum Khan,Assistant Professor,MED,0,,Ext. 2637,,scraped,website,erumkh.jpg
+isikandar@neduet.edu.pk,Mr. Imran Sikandar,Assistant Professor,MED,0,,,,scraped,website,isikandar.jpg
+kashifnoor@neduet.edu.pk,Dr. Kashif Noor,Assistant Professor,MED,1,,Ext. 2347,,scraped,website,kashifnoor.jpg
+masoodakhan@neduet.edu.pk,Mr. Masood Ahmed Khan,Assistant Professor,MED,0,,,,scraped,website,masoodakhan.jpg
+anique@neduet.edu.pk,Dr. Muhammad Anique Azam,Assistant Professor,MED,1,,Ext. 2206,,scraped,website,
+uzairyousuf@neduet.edu.pk,Dr. Muhammad Uzair Yousuf,Assistant Professor,MED,1,,Ext. 2635,,scraped,website+excel,uzairyousuf.jpg
+mumtaz@neduet.edu.pk,Dr. Mumtaz Hussain Qureshi,Assistant Professor,MED,1,,,,scraped,website,mumtaz.jpg
+saeed@neduet.edu.pk,Mr. Saeed Ahmed,Assistant Professor,MED,0,,,,scraped,website,saeed.jpg
+saqibsharif@neduet.edu.pk,Dr. Saqib Sharif,Assistant Professor,MED,1,,Ext. 2347,,scraped,website,saqibsharif.jpg
+shaukatali@neduet.edu.pk,Dr. Shaukat Ali Shaikh,Assistant Professor,MED,1,,,,scraped,website,shaukatali.jpg
+shehrozetahir@neduet.edu.pk,Dr. Shehroze Tahir Khan,Assistant Professor,MED,1,,Ext. 2348,,scraped,website,shehrozetahir.jpg
+shehzaib@neduet.edu.pk,Dr. Shehzaib Yousuf Khan,Assistant Professor,MED,1,,Ext. 2206,,scraped,website,shehzaib.jpg
+asadakhter@neduet.edu.pk,Dr. Syed Muhammad Asad Akhter,Assistant Professor,MED,1,,Ext. 2290,,scraped,website+excel,asadakhter.jpg
+zainshahid@neduet.edu.pk,Dr. Zain Shahid,Assistant Professor,MED,1,,,,scraped,website,zainshahid.jpg
+amujeeb@neduet.edu.pk,Mr. Abdul Mujeeb,Lecturer,MED,0,,,,scraped,website,amujeeb.jpg
+abdulsamadkhan@neduet.edu.pk,Mr. Abdul Samad Khan,Lecturer,MED,0,,Ext. 2532,,scraped,website,abdulsamadkhan.jpg
+ahsanahmed@neduet.edu.pk,Mr. Ahsan Ahmed,Lecturer,MED,0,,Ext. 2290,,scraped,website,ahsanahmed.jpg
+bushrafatima@neduet.edu.pk,Ms. Bushra Fatima,Lecturer,MED,0,,Ext. 2634,,scraped,website,bushrafatima.jpg
+duraid_uddin2000@cloud.neduet.pk,Mr. Duraid Uddin,Lecturer,MED,0,,,,scraped,website+excel,duraid_uddin2000.jpg
+engr.ibrahim.omer@gmail.com,Ibrahim Omer,Lecturer,MED,0,,Ext. 2206,,scraped,website,engr.ibrahim.omer.jpg
+hammadbaig@neduet.edu.pk,Mr. Mirza Hammad Baig,Lecturer,MED,0,,Ext. 2334,,scraped,website,hammadbaig.jpg
+muhammadazam239@cloud.neduet.edu.pk,Mr. Muhammad Azam,Lecturer,MED,0,,Ext. 2369,,scraped,website,muhammadazam239.jpg
+bilalashraf@neduet.edu.pk,Mr. Muhammad Bilal,Lecturer,MED,0,,Ext. 2206,,scraped,website,bilalashraf.jpg
+bilal.ashraf@cloud.neduet.edu.pk,Muhammad Bilal Ashraf,Lecturer,MED,0,,Ext. 2206,,scraped,website,bilal.ashraf.jpg
+khanumar@neduet.edu.pk,Mr. Muhammad Umar Khan,Lecturer,MED,0,,Ext. 2290,,scraped,website,khanumar.jpg
+osama.anis19@cloud.neduet.edu.pk,Mr. Osama Anis,Lecturer,MED,0,,,,scraped,website,osama.anis19.jpg
+sohail@neduet.edu.pk,Mr. Sohail Hasnain,Lecturer,MED,0,,Ext. 2290,,scraped,website,sohail.jpg
+syedhassan@neduet.edu.pk,Syed Muhammad Hassan Liaqat,Lecturer,MED,0,,Ext. 2290,,scraped,website,syedhassan.jpg
+musabnaseem@cloud.neduet.edu.pk,Mr. Syed Muhammad Musab Bin Naseem,Lecturer,MED,0,,Ext. 2206,,scraped,website,musabnaseem.jpg
+talhanadeem@neduet.edu.pk,Mr. Talha Bin Nadeem,Lecturer,MED,0,,Ext. 2290,,scraped,website+excel,talhanadeem.jpg
+umerzahid@neduet.edu.pk,Mr. Umer Zahid,Lecturer,MED,0,,Ext. 2206,,scraped,website,umerzahid.jpg
+yasmeen@neduet.edu.pk,Ms. Yasmeen Khan,Lecturer,MED,0,,Ext. 2206,,scraped,website,yasmeen.jpg
+mtufail@neduet.edu.pk,Prof. Dr. Muhammad Tufail,Professor / Vice-Chancellor,IMD,1,,Ext. 2323,Dr. Muhammad Tufail,scraped,website+excel,mtufail.jpg
+muhammad.wasif@placeholder.neduet.edu.pk,Prof. Dr. Muhammad Wasif,Professor / Chairman / Director - QEC,IMD,1,,Ext. 2462,Dr Muhammad Wasif;Dr. Muhammad Wasif,placeholder,website+excel,muhammad.wasif.jpg
+maqsoodahmed@neduet.edu.pk,Dr. Maqsood Ahmed Khan,Associate Professor,IMD,1,,Ext. 2461,,scraped,website+excel,maqsoodahmed.jpg
+alizul@neduet.edu.pk,Dr. Ali Zulqarnain,Assistant Professor,IMD,1,,Ext. 2389,,scraped,website+excel,alizul.jpg
+sohaibbaqi@neduet.edu.pk,Dr. Aqeel Ahmed,Assistant Professor / Class Advisor Final Year,IMD,1,,Ext. 2463,,scraped,website+excel,sohaibbaqi.jpg
+asimzaheer@neduet.edu.pk,Dr. Asim Zaheer,Assistant Professor,IMD,1,,Ext. 2465,,scraped,website,asimzaheer.jpg
+javeria@neduet.edu.pk,Dr. Javeria Younus,Assistant Professor / Area Co-ordinator/Class Advisor First year,IMD,1,,Ext. 2762,,scraped,website,javeria.jpg
+naima@neduet.edu.pk,Ms. Naima Javed,Assistant Professor / Class Advisor Second year,IMD,0,,Ext. 2762,,scraped,website,naima.jpg
+rabias@cloud.neduet.edu.pk,Ms. Rabia Siddiqui,Assistant Professor / Class Advisor Third Year,IMD,0,,Ext. 2590,,scraped,website,rabias.jpg
+rabiyazubair@neduet.edu.pk,Ms. Rabyia Zubair,Assistant Professor,IMD,0,,Ext. 2590,,scraped,website,rabiyazubair.jpg
+smajeed@neduet.edu.pk,Ms. Sadia Majeed,Assistant Professor,IMD,0,,Ext. 2560,,scraped,website,smajeed.jpg
+saimayaqoob@cloud.neduet.edu.pk,Dr. Saima Yaqoob,Assistant Professor,IMD,1,,Ext. 2361,,scraped,website,saimayaqoob.jpg
+shah30@neduet.edu.pk,Dr. Shaheen Perween,Assistant Professor,IMD,1,,Ext. 2464,,scraped,website,shah30.jpg
+shakeelim@neduet.edu.pk,Dr. Shakeel Ahmed,Assistant Professor / Director - PDC,IMD,1,,Ext. 2361,,scraped,website+excel,shakeelim.jpg
+mehmood.hasan@placeholder.neduet.edu.pk,Dr. Syed Mehmood Hasan,Assistant Professor,IMD,1,,,,placeholder,excel,
+mdanishsaleem@neduet.edu.pk,Muhammad Danish Saleem,Lecturer,IMD,0,,Ext. 2337,,scraped,website+excel,mdanishsaleem.jpg
+mashiatullah@neduet.edu.pk,Muhammad Mashiatullah,Lecturer,IMD,0,,Ext. 2337,,scraped,website,mashiatullah.jpg
+msalman.ned@neduet.edu.pk,Muhammad Salman,Lecturer,IMD,0,,Ext. 2337,,scraped,website,msalman.ned.jpg
+zaid.khan@placeholder.neduet.edu.pk,Muhammad Zaid Khan,Lecturer,IMD,0,,,,placeholder,excel,zaid.khan.jpg
+raheeladeel@neduet.edu.pk,Syed Raheel Adeel,Lecturer,IMD,0,,Ext. 2761,,scraped,website,raheeladeel.jpg
+drbilalzahid@neduet.edu.pk,Prof. Dr. Bilal Zahid,Chairperson,TXD,1,,Ext. 2756,Dr. Bilal Zahid,scraped,website+excel,
+fareha@neduet.edu.pk,Prof. Dr. Fareha Asim,Professor,TXD,1,,Ext. 2295,Dr. Fareha Asim,scraped,website+excel,
+dawood@neduet.edu.pk,Prof. Dr. Muhammad Dawood Husain,Professor,TXD,1,,Ext. 2392,Dr. Muhammad Dawood Husain,scraped,website+excel,dawood.jpg
+orazas@neduet.edu.pk,Prof. Dr. Muhammad Owais Raza Siddiqui,Professor,TXD,1,,Ext. 2267,Dr. M. Owais Raza Siddiqui,scraped,website+excel,orazas.jpg
+qurat@neduet.edu.pk,Prof. Dr. Quratulain Mohtashim,Professor,TXD,1,,Ext. 2365,,scraped,website,
+drsairafaisal@neduet.edu.pk,Prof. Dr. Saira Faisal,Professor,TXD,1,,Ext. 2758,Dr. Saira Faisal,scraped,website+excel,
+shenelanaqvi@neduet.edu.pk,Prof. Dr. Shenela Naqvi,Professor,TXD,1,,Ext. 2365,Dr. Shenela Naqvi,scraped,website+excel,
+asheikh@neduet.edu.pk,Dr. Ali Hasan Mahmood,Associate Professor,TXD,1,,Ext. 2757,,scraped,website+excel,
+farhanap@neduet.edu.pk,Dr. Farhana Naeem,Associate Professor,TXD,1,,Ext. 2365,,scraped,website,
+qureshi@neduet.edu.pk,Dr. Muhammad Amir,Associate Professor,TXD,1,,Ext. 2365,Dr. Muhammad Amir Qureshi;Engr. Dr. Muhammad Amir Qureshi;Dr. Engr. Muhammad Amir Qureshi;Muhammad Amir Qureshi;Dr. Muhammad Ali;Dr Muhammad Amir,scraped,website+excel,qureshi.jpg
+deedarh@neduet.edu.pk,Dr. Deedar Hussain,Assistant Professor,TXD,1,,Ext. 2365,,scraped,website,deedarh.jpg
+sabeen@neduet.edu.pk,Dr. Sabeen Jahanzeb,Assistant Professor,TXD,1,,Ext. 2365,,scraped,website+excel,
+danyalr@neduet.edu.pk,Engr. Danyal Rashid,Lecturer,TXD,0,,Ext. 2365,Mr. Danyal Rashid Khan,scraped,website+excel,danyalr.jpg
+duanisar@cloud.neduet.edu.pk,Engr. Dua Nisar,Lecturer,TXD,0,,Ext. 2365,,scraped,website,
+mahafarrukh@neduet.edu.pk,Engr. Maha Farrukh,Lecturer,TXD,0,,Ext. 2365,,scraped,website,
+usamanoorani@neduet.edu.pk,Mr. Muhammad Usama Noorani,Lecturer,TXD,0,,Ext. 2365,,scraped,website,usamanoorani.jpg
+sarah.jaweed@placeholder.neduet.edu.pk,Engr. Sarah Jaweed,Lecturer,TXD,0,,,,placeholder,excel,
+sehrish.naveed@neduet.edu.pk,Engr. Sehrish Naveed,Lecturer,TXD,0,,Ext. 2365,,scraped,website+excel,
+shehrozeali@neduet.edu.pk,Engr. Shehroze Ali Baig,Lecturer,TXD,0,,Ext. 2365,,scraped,website+excel,shehrozeali.jpg
+tahreem@neduet.edu.pk,Engr. Tahreem Baig,Lecturer,TXD,0,,Ext. 2365,Ms. Tehreem Beg,scraped,website,
+arj@neduet.edu.pk,Prof. Dr. Ali Raza Jafri,Professor / Chairman,AMD,1,,Ext. 2239,,scraped,website,arj.jpg
+assadanis@neduet.edu.pk,Dr. Assad Anis,Professor,AMD,1,,Ext. 2674,Mr. Assad Anis,scraped,website+excel,assadanis.jpg
+mahmed07@neduet.edu.pk,Dr. Munir Ahmed,Professor,AMD,1,,Ext. 2476,,scraped,website+excel,mahmed07.jpg
+nyousuf@neduet.edu.pk,Dr. Noman Uddin Yousuf,Professor,AMD,1,,Ext. 2673,,scraped,website+excel,
+sjrind@neduet.edu.pk,Dr. Saqib Jamshed Rind,Professor,AMD,1,,Ext. 2408,,scraped,website,sjrind.jpg
+mushahid@cloud.neduet.edu.pk,Prof. Dr.-Ing. Syed Mushahid Hussain Hashmi,Professor,AMD,1,,Ext. 2675,Dr.-Ing. Syed Mushahid Hussain Hashmi,scraped,website+excel,
+faraz.akbar@neduet.edu.pk,Dr. Faraz Akbar,Associate Professor,AMD,1,,Ext. 2473,,scraped,website,faraz.akbar.jpg
+hafizasumiya@neduet.edu.pk,Ms. Hafiza Sumiya Mohsin,Lecturer,AMD,0,,Ext. 2477,,scraped,website,hafizasumiya.jpg
+zahoor.awan@placeholder.neduet.edu.pk,Prof. Dr. Zahoor ul Hussain Awan,Professor & Dean CPE,CHE,1,,,,placeholder,website,zahoor.awan.jpg
+saud.hashmi@placeholder.neduet.edu.pk,Prof. Dr. Saud Hashmi,Professor & Chairman (Ag. Chairperson PPD),CHE,1,,,Dr. Saud Hashmi;Dr Saud Hashmi,placeholder,website+excel,saud.hashmi.jpg
+fahim.uddin@placeholder.neduet.edu.pk,Dr. Fahim Uddin,Associate Professor,CHE,1,,,Dr. Fahim uddin,placeholder,website+excel,fahim.uddin.jpg
+faizan.raza@placeholder.neduet.edu.pk,Dr. Faizan Raza,Associate Professor,CHE,1,,,,placeholder,website+excel,faizan.raza.jpg
+saad.nadeem@placeholder.neduet.edu.pk,Dr. Saad Nadeem,Associate Professor,CHE,1,,,,placeholder,website+excel,saad.nadeem.jpg
+abdul.sami@placeholder.neduet.edu.pk,Dr. Abdul Sami,Assistant Professor,CHE,1,,,,placeholder,website,abdul.sami.jpg
+hafsa.bano@placeholder.neduet.edu.pk,Dr. Hafsa Bano,Assistant Professor,CHE,1,,,,placeholder,website,
+rizwan.qamar@placeholder.neduet.edu.pk,Mr. Rizwan Ahmed Qamar,Assistant Professor,CHE,0,,,,placeholder,website,rizwan.qamar.jpg
+sajid.muhbat@placeholder.neduet.edu.pk,Dr. Sajid Muhbat,Assistant Professor,CHE,1,,,,placeholder,website+excel,sajid.muhbat.jpg
+shahzad.shaikh@placeholder.neduet.edu.pk,Dr. Shahzad Shaikh,Assistant Professor,CHE,1,,,,placeholder,website,shahzad.shaikh.jpg
+mohammad.kazmi@placeholder.neduet.edu.pk,Dr. Syed Mohammad Bilal Kazmi,Assistant Professor,CHE,1,,,,placeholder,website,mohammad.kazmi.jpg
+tuba.ansari@placeholder.neduet.edu.pk,Dr. Tuba Siraj Ansari,Assistant Professor,CHE,1,,,,placeholder,website,
+ahmed.ullah@placeholder.neduet.edu.pk,Mr. Ahmed Ullah,Lecturer,CHE,0,,,,placeholder,website,ahmed.ullah.jpg
+muhammad.hasnain@placeholder.neduet.edu.pk,Mr. Muhammad Hasnain,Lecturer,CHE,0,,,,placeholder,website,muhammad.hasnain.jpg
+umair.shaikh@placeholder.neduet.edu.pk,Mr. Muhammad Umair Shaikh,Lecturer,CHE,0,,,,placeholder,website,umair.shaikh.jpg
+tarique@placeholder.neduet.edu.pk,Mr. Syed Muhammad Tarique,Lecturer,CHE,0,,,,placeholder,website,tarique.jpg
+talha.khan@placeholder.neduet.edu.pk,Mr. Talha Hassan Khan,Lecturer,CHE,0,,,,placeholder,website,
+zaha.naseem@placeholder.neduet.edu.pk,Ms. Zaha Naseem,Lecturer,CHE,0,,,,placeholder,website,
+asim.mushtaq@placeholder.neduet.edu.pk,Dr. Asim Mushtaq,Associate Professor,PPD,1,,,,placeholder,website,asim.mushtaq.jpg
+rafiq.ahmed@placeholder.neduet.edu.pk,Dr. Rafiq Ahmed,Associate Professor,PPD,1,,,,placeholder,website+excel,rafiq.ahmed.jpg
+raza.khan@placeholder.neduet.edu.pk,Dr. Raza Muhammad Khan,Associate Professor,PPD,1,,,,placeholder,website,raza.khan.jpg
+amina.israr@placeholder.neduet.edu.pk,Dr. Amina Israr,Assistant Professor,PPD,1,,,,placeholder,website,
+asra.nafees@placeholder.neduet.edu.pk,Dr. Asra Nafees,Assistant Professor,PPD,1,,,Engr Asra Nafees,placeholder,website+excel,
+nadia.khan@placeholder.neduet.edu.pk,Dr. Nadia Khan,Assistant Professor,PPD,1,,,Ms. Nadia Khan,placeholder,website+excel,
+shaheer.khan@placeholder.neduet.edu.pk,Dr. Shaheer Yousuf Khan,Assistant Professor,PPD,1,,,,placeholder,website,
+ahmed.saleem@placeholder.neduet.edu.pk,Engr. Ahmed Saleem,Lecturer,PPD,0,,,,placeholder,website,ahmed.saleem.jpg
+mubashir.alam@placeholder.neduet.edu.pk,Engr. Mubashir Alam,Lecturer,PPD,0,,,,placeholder,website,mubashir.alam.jpg
+ahsan.wasif@placeholder.neduet.edu.pk,Engr. Muhammad Ahsan Wasif,Lecturer,PPD,0,,,,placeholder,website,ahsan.wasif.jpg
+fayaz.hussain@placeholder.neduet.edu.pk,Prof. Dr. Fayaz Hussain,Professor & Chairperson,MMD,1,,,Dr. Fayaz Hussian;Dr. Fayaz Hussain,placeholder,website+excel,fayaz.hussain.jpg
+msohailhanif@neduet.edu.pk,Prof. Dr. Muhammad Sohail Hanif,Professor,MMD,1,,,Dr. Muhammad Sohail Hanif;Dr. Sohail Hanif;Dr. Muhammad Sohail,scraped,website+excel,
+engrabdulrauf@neduet.edu.pk,Dr. Ing. Abdul Rauf Jamali,Associate Professor/Area Coordinator ISO-9000,MMD,1,,,Dr. Abdul Rauf Jamali,scraped,website+excel,
+faazbutt@neduet.edu.pk,Dr. Faaz Ahmed,"Associate Professor, DMR/Dy. Director QEC II",MMD,1,,,Dr. Faaz Ahmed Butt,scraped,website+excel,faazbutt.jpg
+smsajid@neduet.edu.pk,Dr. Muhammad Sajid Ali Asghar,Associate Professor,MMD,1,,,Dr Sajid Ali Asghar,scraped,website+excel,
+sajidasheikh@neduet.edu.pk,Dr. Sajida Sheikh,Assistant Professor,MMD,1,,,,scraped,website+excel,
+danish.majeed@neduet.edu.pk,Engr. Danish Majeed,Lecturer,MMD,0,,,,scraped,website+excel,
+mudassir.farooq@placeholder.neduet.edu.pk,Engr. Mudassir Farooq,Lecturer,MMD,0,,,,placeholder,website,mudassir.farooq.jpg
+umairjamal@neduet.edu.pk,Engr. Umair Jamal,Lecturer,MMD,0,,,,scraped,website,
+ali.chandio@placeholder.neduet.edu.pk,Prof. Dr. Ali Dad Chandio,Chairman / Professor,MYD,1,,,Ali Dad Chandio,placeholder,website+excel,ali.chandio.jpg
+aqeel.shah@placeholder.neduet.edu.pk,Dr. Aqeel Ahmed Shah,Associate Professor,MYD,1,,,,placeholder,website,aqeel.shah.jpg
+iftikhar.channa@placeholder.neduet.edu.pk,Dr. -Ing. Iftikhar Ahmed Channa,Associate Professor,MYD,1,,,Dr.-Ing. Iftikhar Ahmed Channa;Iftikhar Ahmed Channa;Dr. Iftikhar Ahmed Channa,placeholder,website+excel,iftikhar.channa.jpg
+ali.siddiqui@placeholder.neduet.edu.pk,Dr. Engr. Muhammad Ali Siddiqui,Associate Professor and Postgraduate (M.Engg/PhD),MYD,1,,,Dr. Muhammad Ali Siddiqui;Dr. M. Ali Siddiqui;Muhammad Ali Siddiqui,placeholder,website+excel,ali.siddiqui.jpg
+muhammad.rizwan@placeholder.neduet.edu.pk,Dr. Muhammad Rizwan,Associate Professor,MYD,1,,,,placeholder,website+excel,muhammad.rizwan.jpg
+muhammad.samiuddin@placeholder.neduet.edu.pk,Dr. Muhammad Samiuddin,Associate Professor,MYD,1,,,,placeholder,website+excel,muhammad.samiuddin.jpg
+nafis.haque@placeholder.neduet.edu.pk,Dr. Nafis Ul Haque,Associate Professor,MYD,1,,,,placeholder,excel,
+ambreen.azmat@placeholder.neduet.edu.pk,Dr. Ambreen Azmat,Assistant Professor,MYD,1,,,,placeholder,website+excel,
+jahanzeb.bhatti@placeholder.neduet.edu.pk,Dr. Jahanzeb Bhatti,Assistant Professor,MYD,1,,,,placeholder,website,jahanzeb.bhatti.jpg
+shafaq.asrar@placeholder.neduet.edu.pk,Dr. Shafaq Asrar,Assistant Professor,MYD,1,,,,placeholder,website+excel,shafaq.asrar.jpg
+waseem.khan@placeholder.neduet.edu.pk,Dr. Waseem Khan,Assistant Professor,MYD,1,,,,placeholder,website+excel,waseem.khan.jpg
+zubia.anwer@placeholder.neduet.edu.pk,Dr. Zubia Anwer,Assistant Professor,MYD,1,,,,placeholder,website,zubia.anwer.jpg
+ali.taqvi@placeholder.neduet.edu.pk,Dr. Syed Ali Ammar Taqvi,Associate Professor / Chairperson,FED,1,,,Dr Syed Ali Ammar Taqvi,placeholder,website+excel,ali.taqvi.jpg
+tariq.iqbal@placeholder.neduet.edu.pk,Prof. Dr. Tariq Iqbal,Professor,FED,1,,,,placeholder,website,tariq.iqbal.jpg
+aisha.jilani@placeholder.neduet.edu.pk,Dr. Aisha Jilani,Assistant Professor,FED,1,,,,placeholder,website,
+alia.ahrar@placeholder.neduet.edu.pk,Ms. Alia Ahrar,Assistant Professor,FED,0,,,,placeholder,website,
+jawaad.ansari@placeholder.neduet.edu.pk,Dr. Jawaad Ahmed Ansari,Assistant Professor,FED,1,,,,placeholder,website+excel,jawaad.ansari.jpg
+hassam.siddiqui@placeholder.neduet.edu.pk,Mr. Muhammad Hassam Siddiqui,Assistant Professor,FED,0,,,,placeholder,website,hassam.siddiqui.jpg
+nisar.shar@placeholder.neduet.edu.pk,Dr. Nisar Ahmed Shar,Assistant Professor,FED,1,,,,placeholder,website+excel,nisar.shar.jpg
+iqra.alvi@placeholder.neduet.edu.pk,Ms. Iqra Siddiqui Alvi,Lecturer,FED,0,,,,placeholder,website,
+saadia.ahmed@placeholder.neduet.edu.pk,Ms. Saadia Ahmed,Lecturer,FED,0,,,,placeholder,website,
+salman.khan@placeholder.neduet.edu.pk,Mr. Salman Ali Khan,Lecturer,FED,0,,,,placeholder,website,
+nahmed@neduet.edu.pk,Prof. Dr. Noman Ahmed,"Pro Vice Chancellor, Professor",ARD,1,,,,scraped,website+excel,nahmed.jpg
+anaeem@neduet.edu.pk,Prof. Dr. Anila Naeem,Professor & Chairperson,ARD,1,,,PROF. DR. ANILA NAEEM;Anila Naeem,scraped,website+excel,anaeem.jpg
+saeed.ahmed@placeholder.neduet.edu.pk,Dr. Saeed Ud Din Ahmed,Co-Chairperson,ARD,1,,,Saeed Ud Din Ahmed,placeholder,website+excel,saeed.ahmed.jpg
+sarah.khan@placeholder.neduet.edu.pk,Ms. Sarah Ather Khan,Associate Professor,ARD,0,,,,placeholder,excel,
+fahmida.shaikh@placeholder.neduet.edu.pk,Fahmida Shaikh,Assistant Professor,ARD,0,,,,placeholder,excel,
+farida.ghaffar@placeholder.neduet.edu.pk,Farida Abdul Ghaffar,Assistant Professor,ARD,0,,,FARIDA ABDUL GHAFFAR,placeholder,excel,
+masooma.shakir@placeholder.neduet.edu.pk,Dr. Masooma Shakir,Assistant Professor,ARD,1,,,Ar. Masooma Shakir;Dr. Masooma Mohib Shakir,placeholder,excel,
+rabela.junejo@placeholder.neduet.edu.pk,Dr. Rabela Junejo,Assistant Professor,ARD,1,,,,placeholder,excel,
+sadia.bano@placeholder.neduet.edu.pk,Ms. Sadia Bano,Assistant Professor,ARD,0,,,Sadia Bano;Ar. Sadia Bano,placeholder,excel,
+suneela.ahmed@placeholder.neduet.edu.pk,Dr. Suneela Ahmed,Assistant Professor,ARD,1,,,,placeholder,excel,
+rabia.asim@placeholder.neduet.edu.pk,Rabia Asim,Lecturer,ARD,0,,,,placeholder,excel,
+baig@neduet.edu.pk,Prof. Dr. Mirza Mahmood Baig,Professor & Dean ASC,EMS,1,,Ext. 2204,Dr. Mirza Mahmood Baig,scraped,website+excel,
+feomaj@gmail.com,Dr. Faheem Akhtar,Assistant Professor,EMS,1,,,Dr Faheem Akhter,scraped,website+excel,
+farhanahmed1@cloud.neduet.edu.pk,Dr. Farhan Ahmed,Assistant Professor,EMS,1,,,,scraped,website+excel,
+hinamubeen@neduet.edu.pk,Dr. Hina Mubeen,Assistant Professor,EMS,1,,,Dr Hina Mubeen,scraped,website+excel,
+mirzafaizan@cloud.neduet.edu.pk,Dr. Mirza Faizan Ahmed,Assistant Professor,EMS,1,,Ext. 2721,Mirza Faizan Ahmed,scraped,website+excel,
+msiqbal@neduet.edu.pk,Dr. Muhammad Shahid Iqbal,Assistant Professor,EMS,1,,,,scraped,website,
+shabbirbaqai@neduet.edu.pk,Dr. Shabbir Ahmed,Assistant Professor,EMS,1,,,Shabbir Ahmed,scraped,website+excel,
+adnankhalil56@yahoo.com,Mr. Adnan Khalil,Lecturer,EMS,0,,,,scraped,website,
+ahmaraleem@hotmail.com,Mr. Ahmar Aleem,Lecturer,EMS,0,,,,scraped,website,
+jaweriyanaz5@gmail.com,Ms. Jaweriya Naz,Lecturer,EMS,0,,,,scraped,website,
+kanzaharis153@neduet.edu.pk,Ms. Kanza Haris,Lecturer,EMS,0,,,,scraped,website,
+mahamfatima@neduet.edu.pk,Ms. Maham Fatima,Lecturer,EMS,0,,,,scraped,website,
+mariumzehra@neduet.edu.pk,Mrs. Marium Zehra,Lecturer,EMS,0,,,,scraped,website,
+asif.pafkiet@neduet.edu.pk,Mr. Muhammad Asif,Lecturer,EMS,0,,,,scraped,website,
+shahidhussain@neduet.edu.pk,Mr. Shahid Hussain,Lecturer,EMS,0,,,,scraped,website,
+s.zuimahwasim@gmail.com,Ms. Syeda Zuimah Wasim,Lecturer,EMS,0,,,,scraped,website,
+talhafinaneco@gmail.com,Mr. Talha Ahmed Siddiqui,Lecturer,EMS,0,,,,scraped,website,
+zartashiaimran@neduet.edu.pk,Ms. Zartashia Kiran Imran,Lecturer,EMS,0,,,,scraped,website,
+junaid.khan@placeholder.neduet.edu.pk,Dr. Junaid Kareem Khan,Chairman & Associate Professor,PHY,1,,Ext. 2209,,placeholder,website+excel,
+roohizj@neduet.edu.pk,Dr. Roohi Zafar,Associate Professor,PHY,1,,Ext. 2708,,scraped,website+excel,roohizj.jpg
+sabaj@neduet.edu.pk,Dr. Saba Javaid,Associate Professor,PHY,1,,Ext. 2708,,scraped,website+excel,sabaj.jpg
+gmkhan@neduet.edu.pk,Dr. Ghulam Mustafa,Assistant Professor,PHY,1,,Ext. 2601,,scraped,website+excel,gmkhan.jpg
+hiralodi@neduet.edu.pk,Dr. Hira Ashfaq Lodhi,Assistant Professor,PHY,1,,Ext. 2233,Dr. Hira Asfaq Lodhi;Hira Ashfaq Lodhi,scraped,website+excel,hiralodi.jpg
+aqbal@neduet.edu.pk,Dr. Iqbal Tariq,Assistant Professor,PHY,1,,,,scraped,website,aqbal.jpg
+uzairmajeed@neduet.edu.pk,Dr. Uzair Majeed,Assistant Professor,PHY,1,,Ext. 2208,,scraped,website,uzairmajeed.jpg
+aaniaimam@cloud.neduet.edu.pk,Ms. Aniya Imam,Lecturer,PHY,0,,Ext. 2208,,scraped,website,
+ayeshakd@neduet.edu.pk,Ms. Ayesha Khurshid,Lecturer,PHY,0,,Ext. 2602,,scraped,website,ayeshakd.jpg
+fayzan@neduet.edu.pk,Mr. Fayzan Ahmed,Lecturer,PHY,0,,Ext. 2602,Fayzan Ahmed,scraped,website+excel,fayzan.jpg
+mahamajmal@cloud.neduet.edu.pk,Ms. Maham Ajmal,Lecturer,PHY,0,,Ext. 2208,,scraped,website,
+mehwish@placeholder.neduet.edu.pk,Ms. Mehwish,Lecturer,PHY,0,,Ext. 2208,,placeholder,website,
+momina@neduet.edu.pk,Ms. Momina Tariq,Lecturer,PHY,0,,Ext. 2708,,scraped,website,
+shazia.ahmed@placeholder.neduet.edu.pk,Ms. Shazia Ahmed,Lecturer,PHY,0,,Ext. 2602,,placeholder,website,
+usama.ayub@neduet.edu.pk,Mr. Usama Ayub,Lecturer,PHY,0,,Ext. 2431,,scraped,website,usama.ayub.jpg
+amtulq@neduet.edu.pk,Dr. Amtul Qayoom,Professor / Chairperson,CHY,1,,Ext. 2603,,scraped,website+excel,amtulq.jpg
+saeeda@neduet.edu.pk,Dr. Saeeda Nadir Ali,Professor / Co-Chairperson,CHY,1,,Ext. 2604,Dr Saeeda Nadir Ali;Saeeda Nadir Ali,scraped,website+excel,saeeda.jpg
+nuzhat_minhas@yahoo.com,Dr. Nuzhat Arshad,Professor,CHY,1,,Ext. 2707,,scraped,website+excel,nuzhat_minhas.jpg
+syed.nawazish@gmail.com,Dr. Syed Nawazish Ali,Professor,CHY,1,,Ext. 2707,,scraped,website,syed.nawazish.jpg
+anjumayub@neduet.edu.pk,Dr. Anjum Ayub,Associate Professor,CHY,1,,Ext. 2604,,scraped,website+excel,
+kashifahm@neduet.edu.pk,Dr. Kashif Ahmed,Associate Professor,CHY,1,,Ext. 2707,,scraped,website+excel,kashifahm.jpg
+shaziaperveen@neduet.edu.pk,Dr. Shazia Parveen,Associate Professor,CHY,1,,Ext. 2707,Dr. Shazia Perveen;Shazia Perveen,scraped,website+excel,shaziaperveen.jpg
+hirasultan@cloud.neduet.edu.pk,Dr. Hira Sultan,Assistant Professor,CHY,1,,Ext. 2707,Hira Sultan,scraped,website+excel,
+rkhan@neduet.edu.pk,Dr. Rafia Usman,Assistant Professor,CHY,1,,Ext. 2707,,scraped,website,
+atiashamim@cloud.neduet.edu.pk,Ms. Atia Shamim,Lecturer,CHY,0,,Ext. 2707,,scraped,website,
+ghazala_aftab@neduet.edu.pk,Ghazala Aftab,Lecturer (On Contract),CHY,0,,Ext. 2707,,scraped,website,
+shumailajawaid@neduet.edu.pk,Ms. Shumaila Jawaid,Lecturer (on contract),CHY,0,,Ext. 2707,,scraped,website,
+fahimned@neduet.edu.pk,Dr. Fahim Raees,Associate Professor & Chairperson,MTH,1,,Ext. 2510,Dr. Faheem Raees,scraped,website+excel,
+tufail@neduet.edu.pk,Dr. Muhammad Yousuf Tufail,Associate Professor,MTH,1,,Ext. 2609,,scraped,website,tufail.jpg
+faqihasultan@neduet.edu.pk,Dr. Faqiha Sultan,Assistant Professor,MTH,1,,Ext. 2338,,scraped,website,
+harishorani@neduet.edu.pk,Dr. Haris ur Rehman,Contract Assistant Professor,MTH,1,,Ext. 2609,,scraped,website,harishorani.jpg
+kamranza@neduet.edu.pk,Dr. Kamran Zakaria,Assistant Professor,MTH,1,,Ext. 2642,,scraped,website+excel,
+komal@neduet.edu.pk,Dr. Komal Batool,Assistant Professor & Third Year Class Advisor,MTH,1,,Ext. 2609,,scraped,website,
+msamadkhan@neduet.edu.pk,Dr. Muhammad Samad Khan,Assistant Professor & Area Coordinator,MTH,1,,Ext. 2640,,scraped,website,msamadkhan.jpg
+msamisiddiqui@cloud.neduet.edu.pk,Dr. Muhammad Sami Siddiqui,Assistant Professor,MTH,1,,Ext. 2640,,scraped,website,msamisiddiqui.jpg
+raziasha@neduet.edu.pk,Mrs. Razia Shaheen,Assistant Professor,MTH,0,,Ext. 2338,,scraped,website,
+sagul@neduet.edu.pk,Dr. Saima Gul,Assistant Professor,MTH,1,,Ext. 2609,,scraped,website,
+susman@neduet.edu.pk,Mrs. Shumaila Usman,Assistant Professor,MTH,0,,Ext. 2338,,scraped,website,
+sohailcmb@neduet.edu.pk,Mr. Sohail Ahmed,Assistant Professor,MTH,0,,Ext. 2386,,scraped,website,sohailcmb.jpg
+stauqeer@neduet.edu.pk,Dr. Syed Tauqeer Ahmed Hashmi,Assistant Professor,MTH,1,,Ext. 2641,,scraped,website+excel,stauqeer.jpg
+ubaida@neduet.edu.pk,Dr. Ubaida Fatima,Assistant Professor,MTH,1,,Ext. 2609,,scraped,website+excel,
+yasirhussain@neduet.edu.pk,Dr. Yasir Hussain Khan,Assistant Professor,MTH,1,,Ext. 2640,,scraped,website,yasirhussain.jpg
+zakir@neduet.edu.pk,Mr. Zakir Hussain Khan,Assistant Professor,MTH,0,,Ext. 2386,,scraped,website,zakir.jpg
+aishaurooj@cloud.neduet.edu.pk,Ms. Aisha Urooj,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,
+aqsakhan14297@cloud.neduet.edu.pk,Ms. Aqsa Khan,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,
+hussainkausar@cloud.neduet.edu.pk,Mr. Hussain Kausar,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,hussainkausar.jpg
+mahsundus@cloud.neduet.edu.pk,Ms. Mah Sundus,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,
+amin1992.ah@gmail.com,Mr. Muhammad Amin,Lecturer & First Year Class Advisor,MTH,0,,Ext. 2609,,scraped,website,amin1992.ah.jpg
+mzeeshaniqbal@neduet.edu.pk,Engr. Muhammad Zeeshan,Contract Lecturer,MTH,0,,Ext. 2642,,scraped,website,mzeeshaniqbal.jpg
+onaiza@neduet.edu.pk,Ms. Onaiza Ali,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,
+pirbhulal@cloud.neduet.edu.pk,Mr. Pirbhu Lal,Contract Lecturer,MTH,0,,,,scraped,website,
+sabanaz@neduet.edu.pk,Ms. Saba Naz,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,
+samiaerc@neduet.edu.pk,Mr. Samiullah Qureshi,Lecturer & Second and Final Year Class Advisor,MTH,0,,Ext. 2642,,scraped,website,
+shahzaibbinshoaib@gmail.com,Engr. Shahzaib Shoaib,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,shahzaibbinshoaib.jpg
+syedfaraz@cloud.neduet.edu.pk,Syed Faraz Israr,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,syedfaraz.jpg
+yumnastats@neduet.edu.pk,Ms. Yumna Sajid,Contract Lecturer,MTH,0,,Ext. 2609,,scraped,website,
+drzaki@neduet.edu.pk,Prof. Dr. Sajida Zaki,Chairperson,ELS,1,,Ext. 2208,Prof. Sajida Zaki,scraped,website+excel,
+darfarid@neduet.edu.pk,Dr. Muhammad Fareed,Associate Professor,ELS,1,,Ext. 2353,,scraped,website,
+rahilaanwar@live.com,Dr. Rahila Huma Anwar,Associate Professor,ELS,1,,Ext. 2352,,scraped,website+excel,rahilaanwar.jpg
+almasashraf@neduet.edu.pk,Ms. Almas Ashraf,Assistant Professor,ELS,0,,Ext. 2352,,scraped,website,almasashraf.jpg
+asmarashafqat@cloud.neduet.edu.pk,Dr. Asmara Shafqat,Assistant Professor,ELS,1,,Ext. 2352,,scraped,website,
+asimkhan@neduet.edu.pk,Dr. Muhammad Asim Khan,Assistant Professor,ELS,1,,Ext. 2208,,scraped,website,
+s_fizzahaider@cloud.neduet.edu.pk,Ms. Fizza Haider,Lecturer,ELS,0,,Ext. 2352,,scraped,website,
+mahakanwal30@neduet.edu.pk,Ms. Maha Kanwal,Lecturer,ELS,0,,Ext. 2352,,scraped,website,
+maheentufaildahraj@gmail.com,Ms. Maheen Tufail Dahraj,Lecturer,ELS,0,,Ext. 2352,Maheen Tufail Dahraj,scraped,website+excel,maheentufaildahraj.jpg
+mahwisharif22@gmail.com,Ms. Mahwish Arif,Lecturer,ELS,0,,Ext. 2352,Ms. Mehwish Arif,scraped,website+excel,mahwisharif22.jpg
+nidaaftab@cloud.neduet.edu.pk,Ms. Nida Aftab,Lecturer,ELS,0,,Ext. 2352,,scraped,website,nidaaftab.jpg
+samrahraza@cloud.neduet.edu.pk,Ms. Samrah Raza,Lecturer,ELS,0,,Ext. 2352,,scraped,website,
+taurus_sidra@yahoo.com,Ms. Sidra Awan,Lecturer,ELS,0,,Ext. 2352,,scraped,website,taurus_sidra.jpg
+uroojyahya19@cloud.neduet.edu.pk,Ms. Urooj Yahya,Lecturer,ELS,0,,Ext. 2352,,scraped,website,uroojyahya19.jpg
+uriyaz@neduet.edu.pk,Ms. Uzma Riyaz,Lecturer,ELS,0,,Ext. 2352,,scraped,website,uriyaz.jpg
+ahmadni67@neduet.edu.pk,Prof. Dr. Abdul Hai Madni,Professor & Chairperson,ESD,1,,,,scraped,website,
+mfhassan@neduet.edu.pk,Prof. Dr. Farooq Hasan,Professor & Co-Chairperson,ESD,1,,,,scraped,website,
+imrana@neduet.edu.pk,Dr. Imrana Begum,Associate Professor,ESD,1,,,,scraped,website,
+drfarazulhaq@neduet.edu.pk,Dr. Faraz Ul Haq,Assistant Professor,ESD,1,,,,scraped,website,
+rahatbhatti@neduet.edu.pk,Dr. Rahat Rizvi,Assistant Professor,ESD,1,,,,scraped,website,
+anees.rehman@placeholder.neduet.edu.pk,Mr. Anees ur Rehman,Lecturer,ESD,0,,,,placeholder,website,
+jawadalibhutto24@cloud.neduet.edu.pk,Mr. Jawad Ali,Lecturer,ESD,0,,,,scraped,website,
+salahuddin217@cloud.neduet.edu.pk,Mr. Salah Uddin,Lecturer,ESD,0,,,,scraped,website,
+aslam.bhutto@placeholder.neduet.edu.pk,Prof. Dr. Muhammad Aslam Bhutto,Professor / Chairperson,TCE,1,,,Dr. Muhammad Aslam Bhutto,placeholder,website+excel,
+abbas.ali@placeholder.neduet.edu.pk,Prof. Dr. Syed Abbas Ali,"Professor & Chairperson (TIEST Computer Science & Technology; Professor, CIS)",TCS,1,,,Dr. Syed Abbas Ali;Prof .Dr. Syed Abbas Ali,placeholder,website+excel,
+hafeezbabar@neduet.edu.pk,Engr. Abdul Hafeez,Lecturer,TCS,0,,,,scraped,website,hafeezbabar.jpg
+anees.ahmed22@neduet.edu.pk,Engr. Anees Ahmed,Lecturer,TCS,0,,,,scraped,website+excel,anees.ahmed22.jpg
+govarishankar.lalwani@placeholder.neduet.edu.pk,Engr. Govarishankar Lalwani,Lecturer,TCS,0,,,,placeholder,website,
+muhammadabbas@neduet.edu.pk,Mr. Muhammad Abbas,Lecturer,TCS,0,,,,scraped,website,
+neeteshkumar@neduet.edu.pk,Engr. Neetesh Kumar,Lecturer,TCS,0,,,,scraped,website,neeteshkumar.jpg
+renuka@placeholder.neduet.edu.pk,Ms. Renuka,Lecturer,TCS,0,,,,placeholder,website,
+memontalha@neduet.edu.pk,Mr. Talha Memon,Lecturer,TCS,0,,,,scraped,website,memontalha.jpg
+vaneshkumar@neduet.edu.pk,Engr. Vanesh Kumar,Lecturer,TCS,0,,,,scraped,website,

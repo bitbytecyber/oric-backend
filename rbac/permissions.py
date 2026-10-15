@@ -13,7 +13,7 @@ def _resolve_department_id(request, view) -> int | None:
     for source in (getattr(view, "kwargs", {}) or {}, request.query_params, getattr(request, "data", {}) or {}):
         try:
             raw = source.get(field) if hasattr(source, "get") else None
-        except Exception:
+        except Exception:  # noqa: BLE001 - any odd payload shape just means "no department given"
             raw = None
         if raw not in (None, ""):
             try:

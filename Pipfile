@@ -32,6 +32,7 @@ openpyxl = "*"
 python-dateutil = "*"
 
 [dev-packages]
+ruff = "~=0.14"
 
 [requires]
 python_version = "3.12"

@@ -17,12 +17,14 @@ def build_capabilities_flat(user) -> list[dict]:
     out = []
     for key in sorted(user_capability_keys(user)):
         scopes = capability_scopes(user, key)
-        global_scope = any(d is None for d, _ in scopes)
-        unrestricted_pillars = any(not p for _, p in scopes)
+        global_scope = any(s.is_global for s in scopes)
+        any_subject = any(s.any_subject for s in scopes)
         out.append({
             "key": key,
-            "department_ids": "all" if global_scope else sorted({d for d, _ in scopes}),
-            "pillars": "all" if unrestricted_pillars else sorted({x for _, p in scopes for x in p}),
+            "department_ids": "all" if global_scope else sorted({s.department_id for s in scopes if s.department_id}),
+            "faculty_ids": "all" if global_scope else sorted({s.faculty_id for s in scopes if s.faculty_id}),
+            "pillars": "all" if any_subject else sorted({x for s in scopes for x in s.pillars}),
+            "categories": "all" if any_subject else sorted({x for s in scopes for x in s.categories}),
         })
     return out
 
@@ -37,10 +39,14 @@ def build_rules(user, caps: list[dict]) -> list[dict]:
             continue
         action = CAPABILITY_ACTION_TO_CASL.get(meta.action, meta.action)
         conditions = {}
-        if cap["department_ids"] != "all":
+        if cap["department_ids"] != "all" and cap["department_ids"]:
             conditions["department_id"] = {"$in": cap["department_ids"]}
-        if cap["pillars"] != "all":
+        if cap["faculty_ids"] != "all" and cap["faculty_ids"]:
+            conditions["faculty_id"] = {"$in": cap["faculty_ids"]}
+        if cap["pillars"] != "all" and cap["pillars"]:
             conditions["pillar"] = {"$in": cap["pillars"]}
+        if cap["categories"] != "all" and cap["categories"]:
+            conditions["category"] = {"$in": cap["categories"]}
         rule = {"action": action, "subject": meta.subject}
         if conditions:
             rule["conditions"] = conditions
@@ -54,13 +60,17 @@ def build_abilities_payload(user) -> dict:
     if cached:
         return cached
     caps = build_capabilities_flat(user) if not user.is_superuser else [
-        {"key": k, "department_ids": "all", "pillars": "all"} for k in sorted(CAPABILITY_BY_KEY)
+        {"key": k, "department_ids": "all", "faculty_ids": "all", "pillars": "all", "categories": "all"}
+        for k in sorted(CAPABILITY_BY_KEY)
     ]
     rules = build_rules(user, caps)
     roles = [
         {"slug": a.role.slug, "name": a.role.name, "department_id": a.department_id,
-         "department_name": a.department.name if a.department_id else None, "pillars": a.role.pillars}
-        for a in RoleAssignment.objects.filter(user=user, is_active=True).select_related("role", "department")
+         "department_name": a.department.name if a.department_id else None,
+         "faculty_id": a.faculty_id, "faculty_name": a.faculty.name if a.faculty_id else None,
+         "pillars": a.role.pillars, "categories": a.role.categories}
+        for a in RoleAssignment.objects.filter(user=user, is_active=True).select_related("role", "department",
+                                                                                          "faculty")
     ]
     digest = hashlib.sha1(json.dumps(rules, sort_keys=True).encode()).hexdigest()[:12]
     payload = {
