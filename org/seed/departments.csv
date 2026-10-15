@@ -1,0 +1,32 @@
+code,name,faculty_code,chair_email,co_chair_emails,website
+CED,Department of Civil Engineering,CPL,ajsangi@neduet.edu.pk,,https://ced.neduet.edu.pk
+UED,Department of Urban & Infrastructure Engineering,CPL,adnan@neduet.edu.pk,afzal.ahmed@placeholder.neduet.edu.pk;muhammadahmed@neduet.edu.pk,https://ued.neduet.edu.pk
+PED,Department of Petroleum Engineering,CPL,shaine@neduet.edu.pk,,https://ped.neduet.edu.pk
+EQD,Department of Earthquake Engineering,CPL,masood.rafi@placeholder.neduet.edu.pk,,https://eqd.neduet.edu.pk
+END,Department of Environmental Engineering,CPL,atifm@neduet.edu.pk,,https://end.neduet.edu.pk
+EED,Department of Electrical Engineering,ECE,attakhawaja1970@gmail.com,,https://eed.neduet.edu.pk
+ELD,Department of Electronic Engineering,ECE,smuniza@neduet.edu.pk,,https://eld.neduet.edu.pk
+TCD,Department of Telecommunications Engineering,ECE,iaslam@neduet.edu.pk,,https://tcd.neduet.edu.pk
+CIS,Department of Computer & Information Systems Engineering,ECE,maismail@neduet.edu.pk,,https://cis.neduet.edu.pk
+BMD,Department of Biomedical Engineering,ECE,dreraj@neduet.edu.pk,,https://bmd.neduet.edu.pk
+CSIT,Department of Computer Science & Information Technology,ECE,mmkhan@cloud.neduet.edu.pk,shariq@cloud.neduet.edu.pk,https://cct.neduet.edu.pk
+SWE,Department of Software Engineering,ECE,shehnilaz@neduet.edu.pk,,https://se.neduet.edu.pk
+MED,Department of Mechanical Engineering,MME,mubashir@neduet.edu.pk,mshakaib@neduet.edu.pk,https://med.neduet.edu.pk
+IMD,Department of Industrial & Manufacturing Engineering,MME,muhammad.wasif@placeholder.neduet.edu.pk,,https://imd.neduet.edu.pk
+TXD,Department of Textile Engineering,MME,drbilalzahid@neduet.edu.pk,,https://txd.neduet.edu.pk
+AMD,Department of Automotive & Marine Engineering,MME,arj@neduet.edu.pk,,https://atd.neduet.edu.pk
+CHE,Department of Chemical Engineering,CPE,saud.hashmi@placeholder.neduet.edu.pk,,https://dec.neduet.edu.pk
+PPD,Department of Polymer & Petrochemical Engineering,CPE,saud.hashmi@placeholder.neduet.edu.pk,,https://ppd.neduet.edu.pk
+MMD,Department of Materials Engineering,CPE,fayaz.hussain@placeholder.neduet.edu.pk,,https://mmd.neduet.edu.pk
+MYD,Department of Metallurgical Engineering,CPE,ali.chandio@placeholder.neduet.edu.pk,,https://myd.neduet.edu.pk
+FED,Department of Food Engineering,CPE,ali.taqvi@placeholder.neduet.edu.pk,,https://fed.neduet.edu.pk
+ARD,Department of Architecture & Planning,ASC,anaeem@neduet.edu.pk,saeed.ahmed@placeholder.neduet.edu.pk,https://ard.neduet.edu.pk
+EMS,Department of Economics & Management Sciences,ASC,baig@neduet.edu.pk,,https://emd.neduet.edu.pk
+PHY,Department of Physics,ASC,junaid.khan@placeholder.neduet.edu.pk,,https://dph.neduet.edu.pk
+CHY,Department of Chemistry,ASC,amtulq@neduet.edu.pk,,https://dcy.neduet.edu.pk
+MTH,Department of Mathematics,ASC,fahimned@neduet.edu.pk,,https://dmt.neduet.edu.pk
+ELS,Department of English Linguistics & Allied Studies,ASC,drzaki@neduet.edu.pk,,https://del.neduet.edu.pk
+ESD,Department of Essential Studies,ASC,ahmadni67@neduet.edu.pk,mfhassan@neduet.edu.pk,https://des.neduet.edu.pk
+TCE,Department of Civil Engineering (TIEST),TIEST,aslam.bhutto@placeholder.neduet.edu.pk,,https://ced.tiest.neduet.edu.pk
+TCS,Department of Computer Science & Technology (TIEST),TIEST,abbas.ali@placeholder.neduet.edu.pk,,https://cct.tiest.neduet.edu.pk
+TSH,Department of Sciences & Humanities (TIEST),TIEST,,,

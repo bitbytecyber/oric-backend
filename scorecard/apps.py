@@ -1,0 +1,7 @@
+from django.apps import AppConfig
+
+
+class ScorecardConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "scorecard"
+    verbose_name = "HEC scorecard"

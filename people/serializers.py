@@ -145,6 +145,7 @@ class UserAdminSerializer(serializers.ModelSerializer):
             "department": p.department_id if p else None,
             "employee_id": p.employee_id if p else "",
             "phone": p.phone if p else "",
+            "avatar": _abs(self.context.get("request"), p.avatar) if p and p.avatar else None,
         })
         return data
 

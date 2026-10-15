@@ -1,13 +1,12 @@
 import json
 import mimetypes
 
-from django.db import IntegrityError, transaction
-from django.db.models import Count
+from django.db.models import Prefetch, Q
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -15,32 +14,30 @@ from rest_framework.views import APIView
 
 from audit.models import ActivityAction
 from audit.services import record_activity
-from oric_backend.errors import (
-    CycleClosedError,
-    DomainAPIError,
-    InsufficientPermissionError,
-    SubmissionLockedError,
-)
-from org.models import Department, ReportingCycle
+from org.models import ReportingCycle
+from oric_backend.errors import InsufficientPermissionError, SubmissionLockedError
+from people.models import Person
 from rbac.viewsets import RBACViewSetMixin
 
 from . import services
-from .access import can_delete, can_edit, can_view, visible_submissions
-from .models import EvidenceFile, SectionEntry, Submission
-from .registry import SECTION_PILLAR, public_schema
+from .access import can_add, can_delete, can_edit, can_view, proxy_people, visible_submissions
+from .filters import SubmissionFilter
+from .models import Contributor, EvidenceFile, SavedView, Submission
+from .registry import CATEGORY_BY_KEY, public_schema
 from .serializers import (
-    SectionEntrySerializer,
-    SubmissionCreateSerializer,
+    SavedViewSerializer,
     SubmissionDetailSerializer,
     SubmissionListSerializer,
-    SubmissionUpdateSerializer,
+    SubmissionWriteSerializer,
     TransitionSerializer,
 )
-from .validation import file_fields, validate_counts, validate_entry_data, validate_upload
+from .validation import file_fields, validate_upload
+
+LIST_RELATED = ("cycle", "department", "faculty", "owner", "organization", "submitted_by__person")
 
 
 class FormSchemaView(APIView):
-    """Every pillar, count and sub-form definition (drives the SPA's dynamic forms)."""
+    """Pillars + every category definition (drives the SPA's dynamic forms)."""
 
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -49,94 +46,118 @@ class FormSchemaView(APIView):
         return Response(public_schema())
 
 
-class SubmissionViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
-    """Annual pillar returns.
+def detail_queryset():
+    return Submission.objects.select_related(*LIST_RELATED, "verified_by__person", "lineage").prefetch_related(
+        Prefetch("contributors", queryset=Contributor.objects.select_related("person__department", "person__user")),
+        "files", "events__actor__person", "next_stages",
+    )
 
-    Scoping is own-data + capability scope (submissions/access.py), so list /
-    retrieve / update / destroy / transition need no blanket capability; their
-    object-level rules run in the handlers. ``self_scoped_actions`` documents
-    that for the RBAC coverage guard.
+
+class SubmissionViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
+    """Activity records. Scoping is own-data + capability scope (submissions/access.py).
+
+    Create / update accept JSON, or multipart with ``payload`` (JSON string) and one
+    file per file field (named after the field).
     """
 
     capability_map = {
-        "list": None,
-        "retrieve": None,
-        "create": "submission.add",
-        "partial_update": None,
-        "destroy": None,
-        "transition": None,
+        "list": None, "retrieve": None, "create": None, "partial_update": None, "destroy": None,
+        "transition": None, "advance": None, "bulk_transition": "submission.verify", "proxy_people": None,
+        "can_add": None, "people_search": None,
     }
-    self_scoped_actions = {"list", "retrieve", "partial_update", "destroy", "transition"}
+    self_scoped_actions = {"list", "retrieve", "create", "partial_update", "destroy", "transition", "advance",
+                           "proxy_people", "can_add", "people_search"}
     scope_queryset_by_capability = False
-    filterset_fields = {"pillar": ["exact"], "status": ["exact", "in"], "cycle": ["exact"],
-                        "cycle__year": ["exact"], "department": ["exact"], "owner": ["exact"]}
-    search_fields = ["faculty_name", "faculty_email", "designation", "department__name"]
-    ordering_fields = ["updated_at", "submitted_at", "faculty_name", "status", "created_at"]
+    filterset_class = SubmissionFilter
+    ordering_fields = ["event_date", "updated_at", "created_at", "amount_pkr", "title", "status", "category",
+                       "owner__full_name", "department__code"]
+    ordering = ["-updated_at"]
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
     http_method_names = ["get", "post", "patch", "delete"]
 
     def get_queryset(self):
-        qs = Submission.objects.select_related("cycle", "department", "owner", "reviewed_by").annotate(
-            entry_count=Count("entries")
-        )
+        from .access import own_q
+
+        qs = Submission.objects.select_related(*LIST_RELATED)
         if self.request.query_params.get("mine") in ("1", "true"):
-            return qs.filter(owner=self.request.user)
-        return visible_submissions(self.request.user, qs)
+            return qs.filter(own_q(self.request.user))
+        # Drafts are private to whoever is writing them.
+        return visible_submissions(self.request.user, qs).exclude(
+            Q(status=Submission.Status.DRAFT) & ~own_q(self.request.user))
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
-            return SubmissionDetailSerializer
-        if self.action == "create":
-            return SubmissionCreateSerializer
-        if self.action == "partial_update":
-            return SubmissionUpdateSerializer
-        return SubmissionListSerializer
+        return SubmissionDetailSerializer if self.action == "retrieve" else SubmissionListSerializer
 
     def retrieve(self, request, *args, **kwargs):
         sub = self.get_object()
-        sub = Submission.objects.select_related("cycle", "department", "owner", "reviewed_by").prefetch_related(
-            "entries__files", "events__actor"
-        ).annotate(entry_count=Count("entries")).get(pk=sub.pk)
-        return Response(SubmissionDetailSerializer(sub, context={"request": request}).data)
+        return Response(self._detail(sub))
+
+    # --- write -------------------------------------------------------------------
+    def _payload(self, request):
+        raw = request.data.get("payload") if "payload" in request.data else request.data
+        if isinstance(raw, str):
+            try:
+                raw = json.loads(raw or "{}")
+            except json.JSONDecodeError:
+                raise ValidationError({"payload": "Must be a JSON object."})
+        ser = SubmissionWriteSerializer(data=raw)
+        ser.is_valid(raise_exception=True)
+        out = dict(ser.validated_data)
+        out["_keys"] = set(raw.keys()) if hasattr(raw, "keys") else set()
+        return out
+
+    def _uploads(self, request, category):
+        uploads = {}
+        for f in file_fields(category):
+            upload = request.FILES.get(f["name"])
+            if upload:
+                validate_upload(upload)
+                uploads[f["name"]] = upload
+        return uploads
+
+    def _owner(self, d):
+        if d.get("owner"):
+            return get_object_or_404(Person.objects.select_related("department__faculty"), pk=d["owner"])
+        return None
 
     def create(self, request, *args, **kwargs):
-        user = request.user
-        ser = SubmissionCreateSerializer(data=request.data)
-        ser.is_valid(raise_exception=True)
-        d = ser.validated_data
-        cycle = d.get("cycle") or ReportingCycle.current()
-        if cycle is None:
-            raise DomainAPIError(code="NO_CYCLE", http_status=409, message="No reporting cycle is open yet.")
-        if not cycle.accepts_submissions:
-            raise CycleClosedError()
-        department = d.get("department") or user.department
-        if department is None:
-            raise ValidationError({"department": "Choose your department."})
-        existing = Submission.objects.filter(pillar=d["pillar"], cycle=cycle, owner=user).first()
-        if existing:
-            raise DomainAPIError(code="DUPLICATE_SUBMISSION", http_status=409,
-                                 message="You already have a return for this pillar and year.",
-                                 details={"submission_id": existing.pk})
-        try:
-            sub = Submission.objects.create(
-                pillar=d["pillar"], cycle=cycle, owner=user, department=department,
-                faculty_name=d.get("faculty_name") or user.full_name,
-                faculty_email=d.get("faculty_email") or user.email,
-                designation=d.get("designation") or user.designation,
-                counts=validate_counts(d["pillar"], d.get("counts") or {}),
-            )
-        except IntegrityError:
-            raise DomainAPIError(code="DUPLICATE_SUBMISSION", http_status=409,
-                                 message="You already have a return for this pillar and year.")
+        d = self._payload(request)
+        if d["category"] not in CATEGORY_BY_KEY:
+            raise ValidationError({"category": "Unknown category."})
+        owner = self._owner(d)
+        lead = _lead_person_id(d["category"], d.get("people") or [])
+        target = Person.objects.filter(pk=lead).first() if lead else owner
+        if not can_add(request.user, category=d["category"], person=target):
+            raise InsufficientPermissionError(required_permission="submission.add_on_behalf",
+                                              message="You can't record this for that person.")
+        cycle = ReportingCycle.objects.filter(pk=d["cycle"]).first() if d.get("cycle") else None
+        sub = services.save_submission(
+            request.user, category=d["category"], data=d.get("data") or {}, people=d.get("people") or [],
+            owner=owner, cycle=cycle, uploads=self._uploads(request, d["category"]), draft=not d.get("submit"),
+        )
+        if d.get("submit"):
+            services.transition(request.user, sub, "submit")
         return Response(self._detail(sub), status=status.HTTP_201_CREATED)
 
     def partial_update(self, request, *args, **kwargs):
         sub = self.get_object()
-        self._require_edit(sub)
-        ser = SubmissionUpdateSerializer(sub, data=request.data, partial=True)
-        ser.is_valid(raise_exception=True)
-        if "counts" in ser.validated_data:
-            ser.validated_data["counts"] = validate_counts(sub.pillar, ser.validated_data["counts"])
-        ser.save()
+        if not can_edit(request.user, sub):
+            raise SubmissionLockedError() if can_view(request.user, sub) else InsufficientPermissionError(
+                required_permission="submission.change")
+        d = self._payload(request)
+        owner = self._owner(d) or sub.owner
+        cycle = ReportingCycle.objects.filter(pk=d["cycle"]).first() if d.get("cycle") else sub.cycle
+        services.save_submission(
+            request.user, instance=sub, category=sub.category, data={**(sub.data or {}), **(d.get("data") or {})},
+            people=d.get("people") if "people" in d["_keys"] else [
+                {"role": c.role, "person_id": c.person_id, "name": c.name, "designation": c.designation,
+                 "affiliation": c.affiliation} for c in sub.contributors.all()],
+            owner=owner, cycle=cycle, uploads=self._uploads(request, sub.category),
+            draft=sub.status in (Submission.Status.DRAFT, Submission.Status.RETURNED) and not d.get("submit"),
+        )
+        sub.refresh_from_db()
+        if d.get("submit") and sub.status in Submission.EDITABLE_STATUSES:
+            services.transition(request.user, sub, "submit")
         return Response(self._detail(sub))
 
     def destroy(self, request, *args, **kwargs):
@@ -146,6 +167,7 @@ class SubmissionViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
         sub.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    # --- workflow ----------------------------------------------------------------
     @action(detail=True, methods=["post"])
     def transition(self, request, pk=None):
         sub = self.get_object()
@@ -154,123 +176,111 @@ class SubmissionViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
         services.transition(request.user, sub, ser.validated_data["action"], ser.validated_data["comment"])
         return Response(self._detail(sub))
 
-    # helpers -------------------------------------------------------------------
+    @action(detail=False, methods=["post"], url_path="bulk-transition")
+    def bulk_transition(self, request):
+        ids = request.data.get("ids") or []
+        act = request.data.get("action")
+        comment = request.data.get("comment") or ""
+        done, failed = [], []
+        for sub in self.get_queryset().filter(pk__in=ids):
+            try:
+                services.transition(request.user, sub, act, comment)
+                done.append(sub.pk)
+            except Exception as exc:  # noqa: BLE001 - report per row
+                failed.append({"id": sub.pk, "error": str(getattr(exc, "detail", exc))})
+        return Response({"done": done, "failed": failed})
+
+    @action(detail=True, methods=["post"])
+    def advance(self, request, pk=None):
+        sub = self.get_object()
+        if not can_view(request.user, sub):
+            raise InsufficientPermissionError(required_permission="submission.view")
+        nxt = request.data.get("category")
+        target = sub.owner
+        if not can_add(request.user, category=nxt or sub.category, person=target):
+            raise InsufficientPermissionError(required_permission="submission.add")
+        new = services.advance(request.user, sub, nxt)
+        return Response(self._detail(new), status=status.HTTP_201_CREATED)
+
+    # --- helpers for the form ------------------------------------------------------
+    @action(detail=False, methods=["get"], url_path="proxy-people")
+    def proxy_people(self, request):
+        q = (request.query_params.get("q") or "").strip()
+        qs = proxy_people(request.user).select_related("department").filter(is_faculty=True)
+        if q:
+            qs = qs.filter(full_name__icontains=q)
+        return Response([
+            {"id": p.pk, "full_name": p.full_name, "designation": p.designation,
+             "department_code": p.department.code if p.department_id else None,
+             "avatar": p.avatar.url if p.avatar else None}
+            for p in qs.order_by("full_name")[:50]
+        ])
+
+    @action(detail=False, methods=["get"], url_path="people")
+    def people_search(self, request):
+        """NED directory lookup for contributor pickers (names, designations, departments are public)."""
+        q = (request.query_params.get("q") or "").strip()
+        qs = Person.objects.select_related("department").filter(is_faculty=True)
+        if q:
+            from django.db.models import Q
+
+            qs = qs.filter(Q(full_name__icontains=q) | Q(aliases__icontains=q) | Q(department__code__iexact=q))
+        return Response([
+            {"id": p.pk, "full_name": p.full_name, "designation": p.designation,
+             "department_code": p.department.code if p.department_id else None,
+             "avatar": p.avatar.url if p.avatar else None}
+            for p in qs.order_by("full_name")[:30]
+        ])
+
+    @action(detail=False, methods=["get"], url_path="can-add")
+    def can_add(self, request):
+        """Categories the user may record for themselves / on behalf / as ORIC."""
+        user = request.user
+        own = getattr(user, "person", None) if hasattr(user, "person") else None
+        out = {}
+        for key, c in CATEGORY_BY_KEY.items():
+            out[key] = {
+                "self": can_add(user, category=key, person=own) if not c["oric_only"] else False,
+                "oric": c["oric_only"] and can_add(user, category=key),
+            }
+        return Response({"categories": out, "proxy": proxy_people(user).exclude(user=user).exists()})
+
     def _detail(self, sub):
-        sub = Submission.objects.select_related("cycle", "department", "owner", "reviewed_by").prefetch_related(
-            "entries__files", "events__actor"
-        ).annotate(entry_count=Count("entries")).get(pk=sub.pk)
-        return SubmissionDetailSerializer(sub, context={"request": self.request}).data
-
-    def _require_edit(self, sub):
-        if can_edit(self.request.user, sub):
-            return
-        if sub.owner_id == self.request.user.id:
-            if not sub.cycle.accepts_submissions:
-                raise CycleClosedError()
-            raise SubmissionLockedError()
-        raise InsufficientPermissionError(required_permission="submission.change")
+        return SubmissionDetailSerializer(detail_queryset().get(pk=sub.pk), context={"request": self.request}).data
 
 
-class SectionEntryViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
-    """Entries (legacy sub-form rows). Multipart: ``data`` = JSON object, files keyed by field name."""
+def _lead_person_id(category, people):
+    from .registry import lead_slot
 
-    serializer_class = SectionEntrySerializer
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
-    capability_map = {"list": None, "retrieve": None, "create": None, "partial_update": None, "destroy": None}
-    self_scoped_actions = {"list", "retrieve", "create", "partial_update", "destroy"}
-    scope_queryset_by_capability = False
-    filterset_fields = ["submission", "section"]
+    slot = lead_slot(CATEGORY_BY_KEY[category])
+    if not slot:
+        return None
+    for p in people:
+        if p.get("role") == slot["role"] and (p.get("person_id") or p.get("person")):
+            return int(p.get("person_id") or p.get("person"))
+    return None
+
+
+class SavedViewViewSet(viewsets.ModelViewSet):
+    serializer_class = SavedViewSerializer
     http_method_names = ["get", "post", "patch", "delete"]
+    pagination_class = None
 
     def get_queryset(self):
-        visible = visible_submissions(self.request.user).values("pk")
-        return SectionEntry.objects.filter(submission__in=visible).select_related("submission").prefetch_related(
-            "files"
-        )
+        return SavedView.objects.filter(user=self.request.user)
 
-    def _parse(self, request):
-        raw = request.data.get("data", {})
-        if isinstance(raw, str):
-            try:
-                raw = json.loads(raw or "{}")
-            except json.JSONDecodeError:
-                raise ValidationError({"data": "Must be a JSON object."})
-        if not isinstance(raw, dict):
-            raise ValidationError({"data": "Must be a JSON object."})
-        return raw
-
-    def _uploads(self, request, section):
-        uploads = {}
-        for f in file_fields(section):
-            upload = request.FILES.get(f["name"])
-            if upload:
-                validate_upload(upload)
-                uploads[f["name"]] = upload
-        return uploads
-
-    def _store(self, entry, uploads):
-        for field, upload in uploads.items():
-            EvidenceFile.objects.filter(entry=entry, field=field).delete()
-            EvidenceFile.objects.create(
-                entry=entry, field=field, file=upload, original_name=upload.name[:255], size=upload.size,
-                content_type=getattr(upload, "content_type", "") or "", uploaded_by=self.request.user,
-            )
-
-    def _require_edit(self, sub):
-        if can_edit(self.request.user, sub):
-            return
-        if sub.owner_id == self.request.user.id:
-            raise CycleClosedError() if not sub.cycle.accepts_submissions else SubmissionLockedError()
-        raise InsufficientPermissionError(required_permission="submission.change")
-
-    def create(self, request, *args, **kwargs):
-        try:
-            sub = visible_submissions(request.user).get(pk=request.data.get("submission"))
-        except (Submission.DoesNotExist, ValueError, TypeError):
-            raise NotFound("Return not found.")
-        self._require_edit(sub)
-        section = request.data.get("section")
-        if SECTION_PILLAR.get(section) != sub.pillar:
-            raise ValidationError({"section": "This section doesn't belong to this pillar."})
-        uploads = self._uploads(request, section)
-        data = validate_entry_data(section, self._parse(request), existing_files=set(), incoming_files=set(uploads))
-        with transaction.atomic():
-            entry = SectionEntry.objects.create(submission=sub, section=section, data=data, created_by=request.user)
-            self._store(entry, uploads)
-            sub.save(update_fields=["updated_at"])
-        return Response(self.get_serializer(entry).data, status=status.HTTP_201_CREATED)
-
-    def partial_update(self, request, *args, **kwargs):
-        entry = self.get_object()
-        self._require_edit(entry.submission)
-        uploads = self._uploads(request, entry.section)
-        incoming = self._parse(request)
-        merged = {**entry.data, **incoming}
-        existing = set(entry.files.values_list("field", flat=True))
-        data = validate_entry_data(entry.section, merged, existing_files=existing, incoming_files=set(uploads))
-        with transaction.atomic():
-            entry.data = data
-            entry.save()
-            self._store(entry, uploads)
-            entry.submission.save(update_fields=["updated_at"])
-        entry.refresh_from_db()
-        return Response(self.get_serializer(entry).data)
-
-    def destroy(self, request, *args, **kwargs):
-        entry = self.get_object()
-        self._require_edit(entry.submission)
-        entry.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class EvidenceDownloadView(APIView):
-    """Permission-checked evidence download (legacy served /Uploads/<guid> publicly)."""
+    """Permission-checked evidence download."""
 
     envelope = False
 
     def get(self, request, pk):
-        ev = get_object_or_404(EvidenceFile.objects.select_related("entry__submission"), pk=pk)
-        if not can_view(request.user, ev.entry.submission):
+        ev = get_object_or_404(EvidenceFile.objects.select_related("submission"), pk=pk)
+        if not can_view(request.user, ev.submission):
             raise InsufficientPermissionError(required_permission="submission.view")
         record_activity(ActivityAction.DOWNLOAD, request=request, target=ev,
                         description=f"Downloaded {ev.original_name}")

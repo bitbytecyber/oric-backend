@@ -4,7 +4,9 @@ from rest_framework.routers import SimpleRouter
 from . import views
 
 router = SimpleRouter()
+router.register("faculties", views.FacultyViewSet, basename="faculties")
 router.register("departments", views.DepartmentViewSet, basename="departments")
+router.register("organizations", views.OrganizationViewSet, basename="organizations")
 router.register("reporting-cycles", views.ReportingCycleViewSet, basename="reporting-cycles")
 router.register("team-members", views.TeamMemberViewSet, basename="team-members")
 router.register("contact-messages", views.ContactMessageViewSet, basename="contact-messages")

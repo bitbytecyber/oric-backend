@@ -120,6 +120,14 @@ class Person(BaseModelMixin):
     google_scholar = models.URLField(_("Google Scholar profile"), blank=True)
     research_interests = models.TextField(_("research interests"), blank=True)
     bio = models.TextField(_("short bio"), blank=True)
+    is_phd = models.BooleanField(_("holds a PhD"), default=False)
+    is_faculty = models.BooleanField(_("teaching faculty"), default=True,
+                                     help_text=_("Counted in department head-counts and 'who has not submitted'."))
+    aliases = models.JSONField(default=list, blank=True,
+                               help_text=_("Other spellings of the name (used to match imported records)."))
+    email_source = models.CharField(max_length=20, blank=True,
+                                    help_text=_("scraped | placeholder | hr — where the email came from."))
+    source = models.CharField(max_length=30, blank=True, help_text=_("website | excel | manual …"))
 
     class Meta:
         verbose_name = _("person")

@@ -35,6 +35,11 @@ class AccessRole(BaseModelMixin):
         default=list, blank=True,
         help_text='Row restriction: pillar keys this role applies to (e.g. ["IC"]). Empty = all pillars.',
     )
+    categories = models.JSONField(
+        default=list, blank=True,
+        help_text='Row restriction: submission category keys (e.g. ["patent"]). Combined with pillars by OR; '
+                  'both empty = everything.',
+    )
 
     class Meta:
         ordering = ["name"]
@@ -52,13 +57,19 @@ class RoleCapability(BaseModelMixin):
 
 
 class RoleAssignment(BaseModelMixin):
-    """Grants a role to a user, optionally only within one department (NULL = all departments)."""
+    """Grants a role to a user, optionally only within one faculty or one department (both NULL = everywhere).
+
+    Dean → faculty scope; Chairman → department scope; ORIC → global.
+    """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="role_assignments")
     role = models.ForeignKey(AccessRole, on_delete=models.CASCADE, related_name="assignments")
     department = models.ForeignKey("org.Department", null=True, blank=True, on_delete=models.CASCADE,
                                    related_name="role_assignments")
+    faculty = models.ForeignKey("org.Faculty", null=True, blank=True, on_delete=models.CASCADE,
+                                related_name="role_assignments")
     is_active = models.BooleanField(default=True)
+    auto = models.BooleanField(default=False, help_text="Managed by the directory (dean / chair); re-synced on change.")
     granted_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL,
                                    related_name="+")
     note = models.CharField(max_length=255, blank=True)
@@ -72,14 +83,20 @@ class RoleAssignment(BaseModelMixin):
                 name="uniq_active_assignment_department",
             ),
             models.UniqueConstraint(
+                fields=["user", "role", "faculty"],
+                condition=Q(is_active=True, faculty__isnull=False),
+                name="uniq_active_assignment_faculty",
+            ),
+            models.UniqueConstraint(
                 fields=["user", "role"],
-                condition=Q(is_active=True, department__isnull=True),
+                condition=Q(is_active=True, department__isnull=True, faculty__isnull=True),
                 name="uniq_active_assignment_global",
             ),
         ]
 
     def __str__(self):
-        scope = self.department.name if self.department_id else "all departments"
+        scope = (self.department.name if self.department_id else
+                 self.faculty.name if self.faculty_id else "everywhere")
         return f"{self.user} → {self.role} ({scope})"
 
 

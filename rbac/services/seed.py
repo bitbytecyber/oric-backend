@@ -35,7 +35,8 @@ def seed_roles(*, reconcile: bool = True, AccessRole=None, Capability=None, Role
         role, _ = AccessRole.objects.update_or_create(
             slug=rd["slug"],
             defaults={"name": rd["name"], "description": rd.get("description", ""),
-                      "is_system": rd.get("is_system", True), "pillars": rd.get("pillars", [])},
+                      "is_system": rd.get("is_system", True), "pillars": rd.get("pillars", []),
+                      "categories": rd.get("categories", [])},
         )
         wanted = {k for k in role_keys(rd) if k in caps}
         have = set(RoleCapability.objects.filter(role=role).values_list("capability__key", flat=True))

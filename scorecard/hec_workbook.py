@@ -1,0 +1,235 @@
+"""Export the HEC "ORIC Self-Assessment Scorecard" workbook (Score Card + Index-A/B/C/D) for one fiscal year.
+
+Layout follows the HEC template: Score Card sheet with sections A–D, sub-totals,
+grand total and ranking table; Index sheets with one titled table per item in
+the template's order (roman numerals), "SN" header row, data rows and a grand
+total for money tables.
+"""
+from __future__ import annotations
+
+import io
+
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.utils import get_column_letter
+
+from submissions.models import Submission
+from submissions.registry import CATEGORY_BY_KEY
+
+from .engine import compute
+from .models import InstitutionProfile
+
+TEAL = PatternFill("solid", fgColor="1F6F7A")
+SOFT = PatternFill("solid", fgColor="E6F0F1")
+WHITE_BOLD = Font(bold=True, color="FFFFFF")
+BOLD = Font(bold=True)
+THIN = Side(style="thin", color="B7C4C6")
+BOX = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
+WRAP = Alignment(wrap_text=True, vertical="top")
+
+# (sheet, item label, title, category, extra filters) in HEC template order.
+INDEX_TABLES = [
+    ("Index-B", "(i)", "Competitive research grant opportunities identified and circulated", "grant_opportunity", {}),
+    ("Index-B", "(ii)", "Research proposals submitted for funding to HEC", "grant_hec_submitted", {}),
+    ("Index-B", "(iii)", "Research proposals approved for funding by HEC", "grant_hec_approved", {}),
+    ("Index-B", "(iv)", "HEC research projects completed", "grant_hec_completed", {}),
+    ("Index-B", "(v)", "Research proposals submitted to non-HEC sources", "grant_nonhec_submitted", {}),
+    ("Index-B", "(vi)", "Research proposals approved by non-HEC sources", "grant_nonhec_approved", {}),
+    ("Index-B", "(vii)", "Non-HEC research projects completed", "grant_nonhec_completed", {}),
+    ("Index-B", "(viii-a)", "Joint research projects submitted", "joint_submitted", {}),
+    ("Index-B", "(viii-b)", "Joint research projects approved", "joint_approved", {}),
+    ("Index-B", "(viii-c)", "Joint research projects completed", "joint_completed", {}),
+    ("Index-B", "(x)", "Research proposals reviewed by IRB", "irb_review", {}),
+    ("Index-B", "(xi)", "Policy advocacy / case studies presented to government departments", "policy_advocacy", {}),
+    ("Index-B", "(xii)", "Research links established", "research_link", {}),
+    ("Index-B", "(xiii)", "Contract research awarded (national)", "contract_research",
+     {"scope_level": "National"}),
+    ("Index-B", "(xiv)", "Contract research awarded (international)", "contract_research",
+     {"scope_level": "International"}),
+    ("Index-B", "(xvi)", "Civic engagement events / initiatives", "civic_engagement", {}),
+    ("Index-B", "(xvii)", "Consultancy opportunities identified and circulated", "consultancy_opportunity", {}),
+    ("Index-B", "(xviii)", "Consultancy contracts executed through ORIC", "consultancy_contract", {}),
+    ("Index-B", "(xix)", "Liaison developed with AS&RB", "asrb_liaison", {}),
+    ("Index-C", "(i-iii)", "Research, IP and other policies", "policy", {}),
+    ("Index-C", "(iv)", "IP disclosures", "ip_disclosure", {}),
+    ("Index-C", "(v)", "Patents / TM / designs / copyrights filed (national)", "patent",
+     {"data__filed_or_granted": "Filed", "scope_level": "National"}),
+    ("Index-C", "(vi)", "Patents / TM / designs / copyrights granted (national)", "patent",
+     {"data__filed_or_granted": "Granted", "scope_level": "National"}),
+    ("Index-C", "(vii)", "Patents / TM / designs / copyrights filed (international)", "patent",
+     {"data__filed_or_granted": "Filed", "scope_level": "International"}),
+    ("Index-C", "(viii)", "Patents / TM / designs / copyrights granted (international)", "patent",
+     {"data__filed_or_granted": "Granted", "scope_level": "International"}),
+    ("Index-C", "(ix)", "IP licensing negotiations initiated (national)", "licensing_negotiation",
+     {"scope_level": "National"}),
+    ("Index-C", "(x)", "Licenses signed (national)", "license_signed", {"scope_level": "National"}),
+    ("Index-C", "(xi)", "IP licensing negotiations initiated (international)", "licensing_negotiation",
+     {"scope_level": "International"}),
+    ("Index-C", "(xii)", "Licenses signed (international)", "license_signed", {"scope_level": "International"}),
+    ("Index-C", "(xiii)", "Research products / processes / prototypes", "prototype", {}),
+    ("Index-C", "(xiv)", "Science / arts products displayed", "creative_product", {}),
+    ("Index-C", "(xv)", "Visits by industry / community representatives", "industry_visit", {}),
+    ("Index-C", "(xvi)", "Agreements signed for collaboration", "collaboration_agreement", {}),
+    ("Index-C", "(xvii)", "National / international honours and awards", "award", {}),
+    ("Index-D", "(ia)", "Five-year strategic plan", "strategic_plan", {}),
+    ("Index-D", "(i)", "Research revenue generated by ORIC", "research_revenue", {}),
+    ("Index-D", "(ii)", "Revenue from licensing / royalties", "licensing_revenue", {}),
+    ("Index-D", "(iii)", "Trainings / workshops arranged by ORIC", "training_oric", {}),
+    ("Index-D", "(iv)", "Trainings arranged by other HEIs / CB partners", "training_external", {}),
+    ("Index-D", "(v)", "Exhibitions / showcasing events / linkage fairs", "exhibition", {}),
+    ("Index-D", "(vi)", "Trainings attended by ORIC personnel", "training_oric_staff", {}),
+]
+
+
+def _people_text(s: Submission) -> tuple[str, str]:
+    lead, others = "", []
+    for c in s.contributors.all():
+        label = c.display_name
+        desig = c.person.designation if c.person_id else c.designation
+        dept = (c.person.department.name if c.person_id and c.person.department_id else c.affiliation)
+        text = ", ".join(x for x in [label, desig, dept] if x)
+        if not lead and c.person_id == s.owner_id and s.owner_id:
+            lead = text
+        elif not lead and c.order == 0:
+            lead = text
+        else:
+            others.append(text)
+    return lead, "; ".join(others)
+
+
+def _sheet(wb, name):
+    return wb[name] if name in wb.sheetnames else wb.create_sheet(name)
+
+
+def build(cycle, *, include_pending=False) -> bytes:
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Score Card"
+    _score_card(ws, compute(cycle, include_pending=include_pending))
+    _index_a(wb.create_sheet("Index-A"), cycle)
+
+    statuses = [Submission.Status.VERIFIED, Submission.Status.SUBMITTED] if include_pending else \
+        [Submission.Status.VERIFIED]
+    base = Submission.objects.filter(cycle=cycle, status__in=statuses).select_related(
+        "owner__department").prefetch_related("contributors__person__department").order_by("event_date", "pk")
+    cursors: dict[str, int] = {}
+    for sheet, label, title, cat, filters in INDEX_TABLES:
+        sh = _sheet(wb, sheet)
+        row = cursors.get(sheet, 1)
+        if row == 1:
+            sh.cell(row=1, column=1, value={"Index-B": "RESEARCH EXCELLENCE", "Index-C":
+                    "INNOVATION & COMMERCIALIZATION", "Index-D": "SUSTAINABILITY & CAPACITY BUILDING"}[sheet]).font = \
+                Font(bold=True, size=13)
+            row = 3
+        qs = base.filter(category=cat, **filters)
+        row = _table(sh, row, label, title, CATEGORY_BY_KEY[cat], list(qs))
+        cursors[sheet] = row + 2
+    for sh in wb.worksheets[2:]:
+        for i in range(1, 20):
+            sh.column_dimensions[get_column_letter(i)].width = 22
+        sh.column_dimensions["A"].width = 6
+    out = io.BytesIO()
+    wb.save(out)
+    return out.getvalue()
+
+
+def _table(ws, row, label, title, cat, items) -> int:
+    fields = [f for f in cat["fields"] if f["type"] != "file"]
+    has_people = bool(cat["people"])
+    head = ["SN", *(["Name, designation & department of PI / lead", "Co-PI / team"] if has_people else []),
+            *[f["label"] for f in fields], "Annex / evidence"]
+    ws.cell(row=row, column=1, value=f"{label} {title}").font = BOLD
+    ws.cell(row=row, column=1).fill = SOFT
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=len(head))
+    row += 1
+    for i, h in enumerate(head, start=1):
+        c = ws.cell(row=row, column=i, value=h)
+        c.fill, c.font, c.alignment, c.border = TEAL, WHITE_BOLD, WRAP, BOX
+    row += 1
+    amount_col = None
+    if cat["amount_field"]:
+        names = [f["name"] for f in fields]
+        if cat["amount_field"] in names:
+            amount_col = 1 + (2 if has_people else 0) + names.index(cat["amount_field"]) + 1
+    first = row
+    for n, s in enumerate(items, start=1):
+        lead, others = _people_text(s) if has_people else ("", "")
+        values = [n, *([lead, others] if has_people else []), *[s.data.get(f["name"]) for f in fields],
+                  " ".join(s.evidence_links or []) or "; ".join(f.original_name for f in s.files.all())]
+        for i, v in enumerate(values, start=1):
+            c = ws.cell(row=row, column=i, value=v)
+            c.alignment, c.border = WRAP, BOX
+        row += 1
+    if not items:
+        ws.cell(row=row, column=1, value="Nil")
+        row += 1
+    elif amount_col:
+        col = get_column_letter(amount_col)
+        ws.cell(row=row, column=amount_col - 1, value="Grand total").font = BOLD
+        ws.cell(row=row, column=amount_col, value=f"=SUM({col}{first}:{col}{row - 1})").font = BOLD
+        row += 1
+    return row
+
+
+def _score_card(ws, sc):
+    ws.append(["ORIC SELF-ASSESSMENT SCORECARD", "", sc["cycle"]["label"]])
+    ws["A1"].font = Font(bold=True, size=14)
+    ws.append([])
+    head = ["Sr. No.", "Item", "Key Performance Indicator", "Parameters / Items", "Reported Numbers",
+            "Measure (%)", "Max. Score", "Score via Self-Assessment", "Score to be Validated by HEC", "Note"]
+    ws.append(head)
+    for i in range(1, len(head) + 1):
+        c = ws.cell(row=3, column=i)
+        c.fill, c.font, c.alignment = TEAL, WHITE_BOLD, WRAP
+    for sec in sc["sections"]:
+        ws.append([f"{sec['key']}.", "", sec["title"].upper()])
+        ws.cell(row=ws.max_row, column=3).font = BOLD
+        for r in sec["rows"]:
+            rubric = r["rubric"] or "; ".join(
+                f"{b['from']:,} = {b['score']}" for b in r["bands"]) if r["bands"] or r["rubric"] else ""
+            ws.append([r["area"], r["code"].split(".", 1)[1], r["title"], rubric, r["reported"], r["measure"],
+                       r["max"] or None, r["score"] if r["max"] else None, r["hec_score"], r["note"]])
+            for i in range(1, 11):
+                ws.cell(row=ws.max_row, column=i).alignment = WRAP
+        ws.append(["", "", "", "", "", f"Sub Total ({sec['key']})", sec["max"], sec["score"], sec["hec_score"]])
+        ws.cell(row=ws.max_row, column=6).font = BOLD
+    ws.append(["", "", "", "", "", "GRAND TOTAL", 100, sc["total"]])
+    ws.cell(row=ws.max_row, column=6).font = BOLD
+    ws.append([])
+    ws.append(["", "", "Category", "Score", "", "", "University overhead"])
+    for r in sc["ranking"]:
+        ws.append(["", "", r["category"], f"{r['min']} and above" if r["min"] else "Below 40", "", "", r["overhead"]])
+    ws.append(["", "", f"Result: {sc['category']['category']} ({sc['total']} / 100)"])
+    widths = [24, 7, 60, 50, 16, 12, 10, 14, 14, 30]
+    for i, w in enumerate(widths, start=1):
+        ws.column_dimensions[get_column_letter(i)].width = w
+    ws.freeze_panes = "A4"
+
+
+def _index_a(ws, cycle):
+    p = InstitutionProfile.objects.filter(cycle=cycle).first()
+    ws.append(["INDEX-A: UNIVERSITY PROFILE & ORIC HUMAN RESOURCE", "", cycle.label])
+    ws["A1"].font = Font(bold=True, size=13)
+    ws.append([])
+    details = dict(p.details) if p else {}
+    details.setdefault("Total Sanctioned Posts (Faculty)", cycle.sanctioned_faculty_posts)
+    details.setdefault("Total Existing Faculty", cycle.existing_faculty_count)
+    details.setdefault("Total PhD Faculty", cycle.phd_faculty_count)
+    for k, v in details.items():
+        ws.append([k, v])
+        ws.cell(row=ws.max_row, column=1).font = BOLD
+    ws.append([])
+    head = ["SN", "Position", "Full Time / Part Time", "Name", "Office Phone", "Mobile", "Email",
+            "Qualification Level", "Qualification Title", "Field of Study", "Date of Appointment",
+            "Total Experience"]
+    ws.append(head)
+    for i in range(1, len(head) + 1):
+        c = ws.cell(row=ws.max_row, column=i)
+        c.fill, c.font = TEAL, WHITE_BOLD
+    for n, s in enumerate((p.staff if p else []) or [], start=1):
+        ws.append([n, s.get("position"), s.get("employment"), s.get("name"), s.get("office_phone"), s.get("mobile"),
+                   s.get("email"), s.get("qualification_level"), s.get("qualification_title"),
+                   s.get("field_of_study"), s.get("appointment_date"), s.get("experience")])
+    ws.column_dimensions["A"].width = 40
+    for col in "BCDEFGHIJKL":
+        ws.column_dimensions[col].width = 20

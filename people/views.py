@@ -67,7 +67,7 @@ class UserViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
     capability_resource = "user"
     capability_map = {"set_password": "user.set_password", "deactivate": "user.deactivate",
                       "activate": "user.deactivate", "social_accounts": "user.view",
-                      "set_social_account_status": "user.change"}
+                      "set_social_account_status": "user.change", "photo": "user.change"}
     scope_department_field = "person__department_id"
     filterset_fields = {"person__department": ["exact"], "is_active": ["exact"]}
     search_fields = ["email", "person__full_name", "person__designation", "person__employee_id"]
@@ -102,6 +102,32 @@ class UserViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
         record_activity(ActivityAction.PASSWORD_RESET, request=request, target=user,
                         description=f"Password set by admin for {user.email}")
         return Response({"detail": "Password set. The user must change it at next sign-in."})
+
+    @action(detail=True, methods=["post"])
+    def photo(self, request, pk=None):
+        """Set (multipart ``avatar``) or clear (``remove=true``) someone's profile photo."""
+        user = self.get_object()
+        person = getattr(user, "person", None)
+        if person is None:
+            raise DomainAPIError(code="NO_PROFILE", http_status=409, message="This account has no profile yet.")
+        f = request.FILES.get("avatar")
+        if f:
+            if f.size > 2 * 1024 * 1024:
+                raise DomainAPIError(code="PHOTO_TOO_LARGE", http_status=400,
+                                     message="Profile pictures must be under 2 MB.")
+            if (f.content_type or "").split("/")[0] != "image":
+                raise DomainAPIError(code="PHOTO_TYPE", http_status=400, message="Choose a JPG, PNG or WebP image.")
+            if person.avatar:
+                person.avatar.delete(save=False)
+            person.avatar = f
+        elif str(request.data.get("remove", "")).lower() in {"1", "true", "yes"}:
+            if person.avatar:
+                person.avatar.delete(save=False)
+            person.avatar = None
+        else:
+            raise DomainAPIError(code="NO_PHOTO", http_status=400, message="Choose a photo to upload.")
+        person.save()
+        return Response(self.get_serializer(user).data)
 
     @action(detail=True, methods=["post"])
     def deactivate(self, request, pk=None):

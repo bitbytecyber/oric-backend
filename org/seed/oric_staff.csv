@@ -1,0 +1,9 @@
+email,full_name,title,role,department_code,phone_ext,order
+riazuddin@neduet.edu.pk,Dr. Riaz Uddin,Director ORIC,oric_director,EED,Ext. 2232,1
+uzair@neduet.edu.pk,Dr. Muhammad Uzair,Manager Research Operations,research_ops_manager,MED,Ext. 2315,2
+aahmed@neduet.edu.pk,Dr. Ashar Ahmed,Manager Intellectual Property,ip_manager,UED,Ext. 2451,3
+saeeda@neduet.edu.pk,Dr. Saeeda Nadir Ali,Manager Technology Transfer,tech_transfer_manager,CHY,Ext. 2604,4
+mirzafaizan@cloud.neduet.edu.pk,Dr. Mirza Faizan Ahmed,Manager Incubation,incubation_manager,EMS,Ext. 2721,5
+tahreem@neduet.edu.pk,Ms. Tehreem Beg,Assistant Manager ORIC,oric_manager,TXD,Ext. 2365,6
+engrimran@neduet.edu.pk,Dr. Syed Imran Ali,Assistant Manager ORIC,oric_manager,PED,,7
+farwa.hasan@placeholder.neduet.edu.pk,Ms. Farwa Hasan,Communication Manager,oric_staff,,,8

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .access import can_delete, can_edit
-from .models import EvidenceFile, ReviewEvent, SectionEntry, Submission
+from .models import Contributor, EvidenceFile, ReviewEvent, SavedView, Submission
 from .services import allowed_actions
 
 
@@ -16,13 +16,16 @@ class EvidenceFileSerializer(serializers.ModelSerializer):
         return f"/api/v1/evidence/{obj.pk}/download/"
 
 
-class SectionEntrySerializer(serializers.ModelSerializer):
-    files = EvidenceFileSerializer(many=True, read_only=True)
+class ContributorSerializer(serializers.ModelSerializer):
+    display_name = serializers.CharField(read_only=True)
+    person_email = serializers.CharField(source="person.user.email", read_only=True, default=None)
+    department_code = serializers.CharField(source="person.department.code", read_only=True, default=None)
+    person_designation = serializers.CharField(source="person.designation", read_only=True, default=None)
 
     class Meta:
-        model = SectionEntry
-        fields = ["id", "submission", "section", "data", "files", "created_at", "updated_at"]
-        read_only_fields = ["submission", "section", "data", "created_at", "updated_at"]
+        model = Contributor
+        fields = ["id", "role", "person", "name", "designation", "affiliation", "display_name", "person_email",
+                  "department_code", "person_designation"]
 
 
 class ReviewEventSerializer(serializers.ModelSerializer):
@@ -34,39 +37,56 @@ class ReviewEventSerializer(serializers.ModelSerializer):
 
 
 class SubmissionListSerializer(serializers.ModelSerializer):
-    pillar_name = serializers.CharField(source="get_pillar_display", read_only=True)
+    category_label = serializers.SerializerMethodField()
     status_label = serializers.CharField(source="get_status_display", read_only=True)
-    department_name = serializers.CharField(source="department.name", read_only=True)
+    owner_name = serializers.CharField(source="owner.full_name", read_only=True, default=None)
+    department_code = serializers.CharField(source="department.code", read_only=True, default=None)
+    department_name = serializers.CharField(source="department.name", read_only=True, default=None)
+    faculty_code = serializers.CharField(source="faculty.code", read_only=True, default=None)
     cycle_label = serializers.CharField(source="cycle.label", read_only=True)
-    year = serializers.IntegerField(source="cycle.year", read_only=True)
-    entry_count = serializers.IntegerField(read_only=True, default=0)
-    declared_total = serializers.SerializerMethodField()
+    organization_name = serializers.CharField(source="organization.name", read_only=True, default=None)
+    submitted_by_name = serializers.CharField(source="submitted_by.full_name", read_only=True, default=None)
+    on_behalf = serializers.SerializerMethodField()
 
     class Meta:
         model = Submission
-        fields = ["id", "pillar", "pillar_name", "cycle", "cycle_label", "year", "owner", "faculty_name",
-                  "faculty_email", "designation", "department", "department_name", "status", "status_label",
-                  "submitted_at", "reviewed_at", "created_at", "updated_at", "entry_count", "declared_total"]
+        fields = ["id", "category", "category_label", "pillar", "cycle", "cycle_label", "title", "event_date",
+                  "amount_pkr", "scope_level", "funding_source", "organization", "organization_name", "owner",
+                  "owner_name", "department", "department_code", "department_name", "faculty", "faculty_code",
+                  "status", "status_label", "source", "needs_match", "submitted_at", "verified_at", "created_at",
+                  "updated_at", "submitted_by_name", "on_behalf"]
 
-    def get_declared_total(self, obj):
-        return sum(int(v or 0) for v in (obj.counts or {}).values())
+    def get_category_label(self, obj):
+        return obj.category_def["short"]
+
+    def get_on_behalf(self, obj):
+        return bool(obj.submitted_by_id and obj.owner_id and obj.owner.user_id != obj.submitted_by_id)
 
 
 class SubmissionDetailSerializer(SubmissionListSerializer):
-    entries = SectionEntrySerializer(many=True, read_only=True)
+    contributors = ContributorSerializer(many=True, read_only=True)
+    files = EvidenceFileSerializer(many=True, read_only=True)
     events = ReviewEventSerializer(many=True, read_only=True)
-    progress = serializers.SerializerMethodField()
+    verified_by_name = serializers.CharField(source="verified_by.full_name", read_only=True, default=None)
+    lineage_chain = serializers.SerializerMethodField()
     permissions = serializers.SerializerMethodField()
-    reviewed_by_name = serializers.CharField(source="reviewed_by.full_name", read_only=True, default=None)
 
     class Meta(SubmissionListSerializer.Meta):
         fields = SubmissionListSerializer.Meta.fields + [
-            "counts", "review_comment", "reviewed_by", "reviewed_by_name", "entries", "events", "progress",
-            "permissions",
+            "data", "evidence_links", "review_comment", "verified_by", "verified_by_name", "contributors", "files",
+            "events", "lineage", "lineage_chain", "import_ref", "permissions",
         ]
 
-    def get_progress(self, obj):
-        return obj.entry_progress()
+    def get_lineage_chain(self, obj):
+        chain, cur, seen = [], obj, set()
+        while cur.lineage_id and cur.lineage_id not in seen:
+            seen.add(cur.lineage_id)
+            cur = cur.lineage
+            chain.insert(0, cur)
+        chain.append(obj)
+        chain += list(obj.next_stages.all())
+        return [{"id": s.pk, "category": s.category, "label": s.category_def["short"], "status": s.status,
+                 "event_date": s.event_date, "current": s.pk == obj.pk} for s in chain]
 
     def get_permissions(self, obj):
         user = self.context["request"].user
@@ -74,28 +94,39 @@ class SubmissionDetailSerializer(SubmissionListSerializer):
             "can_edit": can_edit(user, obj),
             "can_delete": can_delete(user, obj),
             "actions": allowed_actions(user, obj),
+            "next_stages": next_stages(user, obj),
         }
 
 
-class SubmissionCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Submission
-        fields = ["id", "pillar", "cycle", "department", "faculty_name", "faculty_email", "designation", "counts"]
-        extra_kwargs = {
-            "cycle": {"required": False},
-            "department": {"required": False},
-            "faculty_name": {"required": False},
-            "faculty_email": {"required": False},
-            "counts": {"required": False},
-        }
+def next_stages(user, obj) -> list[str]:
+    """A stage advances only once ORIC has verified it (an unverified proposal can't be "approved"),
+    and only for its author or staff who can change it. A granted patent has no next stage."""
+    from .access import _is_author, can_staff
+
+    if obj.status != "verified":
+        return []
+    if not (_is_author(user, obj) or can_staff(user, "submission.change", obj)):
+        return []
+    if obj.category == "patent" and (obj.data or {}).get("filed_or_granted") == "Granted":
+        return []
+    return obj.category_def["next_stages"]
 
 
-class SubmissionUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Submission
-        fields = ["department", "faculty_name", "faculty_email", "designation", "counts"]
+class SubmissionWriteSerializer(serializers.Serializer):
+    category = serializers.CharField()
+    cycle = serializers.IntegerField(required=False, allow_null=True)
+    owner = serializers.IntegerField(required=False, allow_null=True, help_text="Person id (on behalf of).")
+    data = serializers.JSONField(required=False, default=dict)
+    people = serializers.JSONField(required=False, default=list)
+    submit = serializers.BooleanField(required=False, default=False)
 
 
 class TransitionSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=ReviewEvent.Action.choices)
     comment = serializers.CharField(required=False, allow_blank=True, default="")
+
+
+class SavedViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SavedView
+        fields = ["id", "name", "filters", "created_at"]

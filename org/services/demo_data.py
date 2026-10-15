@@ -8,8 +8,6 @@ from __future__ import annotations
 import datetime
 import random
 
-from submissions.registry import DEPARTMENTS
-
 # --- people ---------------------------------------------------------------------
 FIRST_M = ["Ahmed", "Ali", "Bilal", "Faisal", "Hamza", "Imran", "Junaid", "Kamran", "Moiz", "Noman", "Owais", "Rizwan",
            "Saad", "Salman", "Tariq", "Umair", "Usman", "Waqar", "Yasir", "Zeeshan", "Asad", "Danish", "Farhan", "Hasan"]
@@ -126,132 +124,94 @@ def fy_date(rng: random.Random, year: int) -> datetime.date:
     return start + datetime.timedelta(days=rng.randint(0, 360))
 
 
-def value_for(field: dict, section_key: str, ctx: dict, rng: random.Random):
-    """Plausible value for one registry field. ctx: user, department, year, project, i."""
+def value_for(field: dict, category: str, ctx: dict, rng: random.Random):
+    """Plausible value for one registry field. ctx: person, year, project."""
     n, t = field["name"], field["type"]
-    user, dept, year = ctx["user"], ctx["department"], ctx["year"]
-    project = ctx["project"]
-
+    year, project = ctx["year"], ctx["project"]
     if t == "date":
+        if n == "end_date":
+            return (fy_date(rng, year) + datetime.timedelta(days=rng.choice([365, 540, 730]))).isoformat()
         return fy_date(rng, year).isoformat()
-    if t == "department":
-        return dept
     if t in ("select", "radio"):
-        opts = [o for o in field.get("options") or [] if o != "Other"]
-        if n == "status" and section_key in ("A1", "A2"):
-            return rng.choices(["Pending", "Completed", "Rejected"], [6, 3, 1])[0]
+        opts = field.get("options") or []
+        if n == "national_or_international":
+            return rng.choices(opts, [4, 1])[0]
+        if n == "status":
+            return rng.choices(opts, [5, 2, 1, 1, 0.3][:len(opts)])[0] if opts else ""
+        if n == "thematic_area":
+            return rng.choice(["Engineering & Technology", "Computer Science and Informatics",
+                               "Earth Systems and Environmental Sciences", "Physics", "Chemistry",
+                               "Management Sciences"])
         return rng.choice(opts) if opts else ""
     if t == "int":
-        return rng.choice([18, 25, 32, 40, 55, 70, 85, 120, 150]) if "particip" in n else rng.randint(1, 6)
+        return rng.choice([18, 25, 32, 40, 55, 70, 85, 120]) if "particip" in n else rng.randint(1, 6)
     if t == "decimal":
-        if n == "oric_percentage":
+        label = field["label"].lower()
+        if "%" in label:
             return rng.choice([10, 15, 20])
-        if field.get("money"):
-            label = field["label"].lower()
-            if "million" in label:
-                return round(rng.uniform(0.8, 25.0), 2)
-            return float(rng.choice([150000, 250000, 400000, 750000, 1200000, 2500000, 5000000]))
-        return round(rng.uniform(1, 20), 1)
+        if "million" in label:
+            return round(rng.uniform(0.8, 25.0), 2)
+        return float(rng.choice([150000, 250000, 400000, 750000, 1200000, 2500000]))
     if t == "url":
         return f"https://doi.org/10.1016/j.demo.{year}.{rng.randint(100000, 999999)}"
-
-    # text / textarea by name
+    if t == "file":
+        return None
     simple = {
-        "pi_name": user.full_name, "lead_inventor_name": user.full_name, "lead_name": user.full_name,
-        "pi_designation": user.designation, "lead_inventor_designation": user.designation,
-        "lead_designation": user.designation,
-        "thematic_area": project["theme"], "field_of_study": project["theme"], "sector": project["theme"],
-        "field": project["theme"], "field_of_use": project["theme"],
-        "research_proposal_title": project["title"], "project_title": project["title"],
-        "research_grant_name": rng.choice(GRANTS_HEC) if section_key in ("A1", "A3", "A5") else rng.choice(AGENCIES_NON_HEC),
-        "joint_research_grant_name": f"{rng.choice(AGENCIES_NON_HEC)} joint call {year}",
-        "funding_agency": rng.choice(AGENCIES_NON_HEC),
-        "sponsoring_agency": rng.choice(AGENCIES_NON_HEC + COMPANIES),
-        "sponsoring_agency_name": rng.choice(COMPANIES),
-        "sponsoring_agency_address": "Karachi, Pakistan",
-        "counterpart_industry": f"{rng.choice(COMPANIES)}, Karachi, Pakistan",
-        "co_pi_name": f"Dr. {rng.choice(FIRST_M + FIRST_F)} {rng.choice(LAST)}",
-        "co_pi_designation": rng.choice(["Professor", "Associate Professor", "Senior Lecturer"]),
-        "co_pi_department": rng.choice(["Civil Engineering", "Computer Science", "Electrical Engineering", "Chemistry"]),
-        "co_pi_university": rng.choice(UNIVERSITIES),
+        "research_grant_name": rng.choice(GRANTS_HEC) if "hec" in category and "non" not in category
+        else rng.choice(AGENCIES_NON_HEC),
+        "funding_agency": rng.choice(AGENCIES_NON_HEC), "research_proposal_title": project["title"],
+        "project_title": project["title"], "opportunity_title": f"{rng.choice(AGENCIES_NON_HEC)} call {year}",
         "collaborating_partners": rng.choice(["", rng.choice(UNIVERSITIES), rng.choice(COMPANIES)]),
         "co_funding_partners": rng.choice(["", "", rng.choice(COMPANIES)]),
-        "co_funding_partners_details": rng.choice(["", rng.choice(COMPANIES)]),
-        "company_details": f"{rng.choice(COMPANIES)}, Karachi",
-        "consultancy_type": rng.choice(["Feasibility study", "Design review", "Testing & certification", "Energy audit",
-                                        "Third-party validation"]),
-        "key_deliverables": "Technical report, design drawings and a one-day training for client engineers.",
+        "sponsoring_agency": rng.choice(COMPANIES), "counterpart_industry": f"{rng.choice(COMPANIES)}, Karachi",
         "expected_deliverables": "Validated prototype, two journal papers and a technology-transfer workshop.",
+        "key_project_deliverables": "Final technical report, prototype and two journal publications.",
         "government_body_presented": rng.choice(GOV_BODIES),
-        "advocacy_area": rng.choice(["Economic development", "Environment", "Social protection", "Urban planning"]),
         "brief": f"Policy brief drawing on '{project['title']}' with recommendations for provincial adoption.",
-        "coalition_partners": rng.choice(["", rng.choice(NGOS)]),
         "advocacy_tools": "Policy brief, stakeholder meeting and a media briefing.",
-        "host_institution_name": rng.choice(UNIVERSITIES), "host_institution_address": "See institution name",
-        "host_institution": rng.choice(UNIVERSITIES),
-        "collaborating_agency_name": rng.choice(UNIVERSITIES + COMPANIES), "collaborating_agency_address": "Karachi, Pakistan",
+        "coalition_partners": rng.choice(["", rng.choice(NGOS)]),
+        "research_status": "Backed by completed field study",
+        "host_institution": "NED University of Engineering & Technology, Karachi, Pakistan",
+        "collaborating_agency": rng.choice(UNIVERSITIES + COMPANIES), "partner_institution": rng.choice(UNIVERSITIES + COMPANIES),
+        "field_of_study": project["theme"], "field": project["theme"], "field_of_use": project["theme"],
+        "sector": project["theme"],
         "scope_of_collaboration": "Joint supervision of graduate students, shared lab access and co-authored proposals.",
         "salient_features": "Five-year MoU with annual review, faculty exchange and joint seminar series.",
         "key_initiatives": "Joint research projects, student internships and an annual industry day.",
         "duration": rng.choice(["2 years", "3 years", "5 years"]),
         "event_title": rng.choice(["Clean water awareness drive in Lyari", "Heat-wave preparedness camp",
-                                   "Road safety audit with the community", "Solar lantern distribution in Thatta"]),
-        "community_component": rng.choice(["Residents of Lyari", "Fishing communities of Ibrahim Hyderi",
-                                           "Government school students", "Small traders of Saddar"]),
+                                   "Road safety audit with the community"]),
+        "community_component": rng.choice(["Residents of Lyari", "Government school students", "Small traders of Saddar"]),
         "outcome": "Case study prepared and shared with the district administration.",
-        "collaboration_developed": rng.choice(GOV_BODIES),
-        "engaged_csos_ngos": rng.choice(NGOS),
-        "arranged_or_participated": rng.choice(["Arranged", "Participated"]),
+        "collaboration_developed": rng.choice(GOV_BODIES), "engaged_csos_ngos": rng.choice(NGOS),
         "dissemination_material": "Brochure and event report on the ORIC website.",
-        "liaison_with": rng.choice(["AS&RB — PhD admissions committee", "AS&RB — research ethics review",
-                                    "AS&RB — postgraduate curriculum committee"]),
+        "company_details": f"{rng.choice(COMPANIES)}, Pakistan",
+        "key_deliverables": "Technical report, test certificates and a one-day training for client engineers.",
+        "liaison_with": "AS&RB annual research report & priority areas",
         "invention_title": rng.choice(INVENTIONS),
         "key_scientific_aspects": "Novel low-cost design using locally available materials; lab-validated at TRL 4.",
         "commercial_partner": rng.choice(["", rng.choice(COMPANIES)]),
-        "disclosure_made_with": "IPO Pakistan through NED ORIC patent cell",
-        "patent_filed_with": "Intellectual Property Organization of Pakistan (IPO-Pakistan)",
-        "granting_authority": "", "financial_support": rng.choice(["", "ORIC seed grant", "HEC TTSF"]),
-        "previous_disclosure": "",
-        "licensee_details": f"{rng.choice(COMPANIES)} (licensee)",
-        "negotiation_status": rng.choice(["Term sheet shared", "Under legal review", "Draft agreement agreed"]),
-        "duration_of_agreement": rng.choice(["3 years", "5 years"]),
-        "agreement_duration": rng.choice(["3 years", "5 years"]),
+        "disclosure_made_with": "IPO-Pakistan through NED ORIC patent cell", "filed_with": "IPO-Pakistan",
+        "application_no": f"{rng.randint(100, 999)}/{year}", "financial_support": rng.choice(["", "ORIC seed grant"]),
+        "licensee": rng.choice(COMPANIES), "negotiation_status": rng.choice(["Term sheet shared", "Under legal review"]),
+        "duration_of_agreement": "5 years", "agreement_duration": "5 years",
         "industrial_partner": rng.choice(COMPANIES),
         "forum": rng.choice(["NED Open House", "ITEAP Expo Karachi", "Pakistan Science Festival"]),
-        "status": rng.choice(["Displayed", "Registered", "Performed"]),
-        "visitor_name": f"{rng.choice(COMPANIES)} delegation",
-        "agenda": "Lab tour, discussion on joint projects and student internships.",
-        "award_received": "Certificate and medal",
-        "conferring_organization": rng.choice(["IEEE Karachi Section", "PEC", "HEC", "ITEX Malaysia"]),
-        "work_details": f"Recognised for work on '{project['title']}'.",
-        "winner_details": f"{user.full_name}, {user.designation}, {dept.replace('Department of ', '')}",
-        "focus_and_outcomes": "Hands-on sessions; participants drafted proposals and received feedback.",
-        "organizer": rng.choice(UNIVERSITIES), "organizers": "ORIC, NED University",
-        "panelist_details": f"Dr. {rng.choice(FIRST_M + FIRST_F)} {rng.choice(LAST)} ({rng.choice(COMPANIES)})",
-        "venue": rng.choice(["NED Main Auditorium", "ORIC Seminar Hall", "NED City Campus"]),
-        "publication_reference": f"{user.full_name.split(' ', 1)[1]} et al. ({year}) {project['title']}. "
-                                 f"{rng.choice(JOURNALS)}, {rng.randint(8, 40)}({rng.randint(1, 12)}), "
-                                 f"{rng.randint(100, 900)}–{rng.randint(901, 1500)}.",
-        "license_agreement": rng.choice(["N/A", f"Licensed from NED to the startup, {year}"]),
-        "funding_source": rng.choice(["N/A", "Ignite NIC Karachi", "Angel investor"]),
-        "stage": rng.choice(["Initial", "Prototype developed", "Pilot with first customers"]),
-        "startup_details": f"{project['startup'][0]} — {project['startup'][1]}",
-        "in_kind_support": rng.choice(["", "Co-working space at NIC Karachi"]),
-        "remarks": "",
+        "title": rng.choice(EVENT_TITLES) if category.startswith(("training", "exhibition")) else
+        (rng.choice(AWARDS) if category == "award" else project["title"]),
+        "conferring_organization": rng.choice(["Pakistan Engineering Council", "HEC", "IEEE Karachi Section"]),
+        "award_received": rng.choice(["Gold medal", "Certificate & shield", "Cash prize"]),
+        "work_details": f"Recognised for work on {project['theme'].lower()}.",
+        "focus_and_outcomes": "Hands-on sessions; participants drafted proposals reviewed by ORIC.",
+        "organizer": rng.choice(["NIC Karachi", "Sindh HEC", "K-Electric", "IoBM"]),
+        "visitor_name": rng.choice(COMPANIES), "agenda": "Lab visit and discussion on joint testing projects.",
+        "publication_title": project["title"], "journal": rng.choice(JOURNALS),
+        "publication_reference": f"{ctx['person'].full_name} et al. ({year}) {project['title']}. {rng.choice(JOURNALS)}.",
+        "startup_name": project["startup"][0], "spinoff_name": project["startup"][0] + " Labs",
+        "startup_details": f"{project['startup'][0]} ({project['startup'][1]})",
+        "stage": "Prototype developed", "venue": "NED BIC, Karachi", "organizers": "NED BIC",
     }
-    if n in simple:
-        return simple[n]
-    if n == "title":
-        if section_key in ("B10", "B11", "B12", "C4"):
-            return rng.choice(EVENT_TITLES)
-        if section_key == "B9":
-            return rng.choice(AWARDS)
-        return rng.choice(INVENTIONS)
-    if n == "startup_name":
-        return project["startup"][0]
-    if n == "spinoff_name":
-        return f"{project['startup'][0]} Technologies (Pvt) Ltd"
-    return f"{field['label'].split('(')[0].strip()}"
+    return simple.get(n, "" if not field["required"] else project["theme"])
 
 
 def make_project(rng: random.Random) -> dict:
@@ -265,7 +225,6 @@ def _pdf_escape(s: str) -> str:
 
 def make_pdf(lines: list[str]) -> bytes:
     """A small, valid single-page PDF (Helvetica) with the given lines."""
-    y, ops = 780, ["BT", "/F1 16 Tf", "50 800 Td"]
     content = ["BT /F1 15 Tf 50 790 Td (" + _pdf_escape(lines[0]) + ") Tj ET"]
     for i, line in enumerate(lines[1:]):
         y = 760 - i * 18
@@ -292,4 +251,4 @@ def make_pdf(lines: list[str]) -> bytes:
     return out
 
 
-__all__ = ["DEPARTMENTS", "make_person", "make_project", "value_for", "make_pdf", "fy_date"]
+__all__ = ["make_person", "make_project", "value_for", "make_pdf", "fy_date"]

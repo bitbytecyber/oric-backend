@@ -15,6 +15,8 @@ urlpatterns = [
     path(API, include("rbac.urls")),
     path(API, include("submissions.urls")),
     path(API, include("reports.urls")),
+    path(API, include("scorecard.urls")),
+    path(API, include("imports.urls")),
     path(API, include("notifications.urls")),
     path(API, include("audit.urls")),
 ]

@@ -58,6 +58,7 @@ class GoogleSignInPolicyTests(TestCase):
             self.adapter.pre_social_login(self.request, _login(self.user.email, verified="false"))
         self.assertEqual(cm.exception.code, "email_not_verified")
 
+    @override_settings(GOOGLE_ALLOWED_DOMAINS=[])
     def test_unknown_address_never_creates_an_account(self):
         with self.assertRaises(ValidationError) as cm:
             self.adapter.pre_social_login(self.request, _login("stranger@gmail.com"))
