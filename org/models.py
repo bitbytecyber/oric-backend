@@ -79,6 +79,15 @@ class ReportingCycle(models.Model):
     sanctioned_faculty_posts = models.PositiveIntegerField(null=True, blank=True)
     existing_faculty_count = models.PositiveIntegerField(null=True, blank=True)
 
+    class Framework(models.TextChoices):
+        HEC_2019 = "hec_2019", "HEC performance matrix (Annexure 1-4, FY 2019-20)"
+        HEC_2020 = "hec_2020", "HEC ORIC scorecard (Index A-D, FY 2020-21)"
+        HEC_2021 = "hec_2021", "HEC ORIC self-assessment scorecard (FY 2021-22 onward)"
+
+    # Which HEC template the year was reported in. KPIs are always computed with the current framework;
+    # older years also keep the score card they actually filed (see scorecard "as submitted").
+    framework = models.CharField(max_length=10, choices=Framework.choices, default=Framework.HEC_2021)
+
     class Meta:
         ordering = ["-year"]
 

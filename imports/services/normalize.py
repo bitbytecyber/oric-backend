@@ -100,13 +100,27 @@ def to_date(v) -> str | None:
             return datetime.date(y, mth, d).isoformat()
         except ValueError:
             pass
+    if not re.search(r"\d{4}", first):
+        return None
+    years = [m for m in re.finditer(r"(?<!\d)(\d{4})(?!\d)", first) if 1990 <= int(m.group(1)) <= 2100]
+    # the year written after a month ('Room 2010, 5 May 2021' -> 2021), else the first plausible one (a range's start)
+    dated = [m for m in years if re.search(r"jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec",
+                                           first[max(0, m.start() - 16):m.start()], re.I)]
+    year = int((dated or years)[0].group(1)) if years else None
     try:
         from dateutil import parser
 
-        return parser.parse(first, dayfirst=True, fuzzy=True, default=datetime.datetime(2000, 1, 1)).date().isoformat() \
-            if re.search(r"\d{4}", first) else None
+        d = parser.parse(first, dayfirst=True, fuzzy=True, default=datetime.datetime(2000, 1, 1)).date()
     except Exception:  # noqa: BLE001
         return None
+    # fuzzy parsing can take the year from a stray number ('9th and 10th July 2019' -> 2009) or drop one glued to
+    # text ('July 2020(delayed due to COVID)' -> 2000): the 4-digit year written in the cell wins
+    if year is None:
+        return d.isoformat()
+    try:
+        return d.replace(year=year).isoformat()
+    except ValueError:  # 29 Feb in a non-leap year
+        return d.replace(year=year, day=28).isoformat()
 
 
 def date_range(v) -> tuple[str | None, str | None]:

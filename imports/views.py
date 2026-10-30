@@ -112,12 +112,19 @@ class ImportBatchViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
                             raise _Rollback
                     except _Rollback:
                         pass
+                    except ValueError as e:  # not an HEC workbook, bad table key, missing override sheet
+                        raise ValidationError({"file": str(e)}) from e
                     return Response({"dry_run": True, "result": stats, "log": log})
                 batch = ImportBatch.objects.create(kind=kind, original_name=upload.name, cycle=cycle,
                                                    created_by=request.user, options={"replace": replace})
                 upload.seek(0)
                 batch.file.save(upload.name, upload, save=True)
-                import_workbook(batch, path, replace=replace, user=request.user)
+                try:
+                    import_workbook(batch, path, replace=replace, user=request.user)
+                except ValueError as e:
+                    batch.status, batch.log = ImportBatch.Status.FAILED, str(e)
+                    batch.save(update_fields=["status", "log"])
+                    raise ValidationError({"file": str(e)}) from e
             finally:
                 os.unlink(path)
             return Response(self.get_serializer(self.get_queryset().get(pk=batch.pk)).data, status=201)
@@ -169,7 +176,8 @@ class ResolveSerializer(serializers.Serializer):
 
 
 class ImportRowViewSet(RBACViewSetMixin, viewsets.ReadOnlyModelViewSet):
-    """The unmatched queue (``?status=unmatched``) and per-batch row log."""
+    """The unmatched queue (``?status=unmatched``) and per-batch row log; ``?flagged=1`` keeps rows carrying
+    data-quality notes (dropped dates, recovered titles)."""
 
     serializer_class = ImportRowSerializer
     capability_map = {"list": "import.view", "retrieve": "import.view", "resolve": "import.run"}
@@ -177,7 +185,10 @@ class ImportRowViewSet(RBACViewSetMixin, viewsets.ReadOnlyModelViewSet):
     search_fields = ["person_text", "ref"]
 
     def get_queryset(self):
-        return ImportRow.objects.select_related("batch", "submission").order_by("person_text", "id")
+        qs = ImportRow.objects.select_related("batch", "submission").order_by("person_text", "id")
+        if self.request.query_params.get("flagged") in ("1", "true"):
+            qs = qs.filter(parsed__has_key="_flags").order_by("table", "ref")
+        return qs
 
     @action(detail=True, methods=["post"])
     def resolve(self, request, pk=None):

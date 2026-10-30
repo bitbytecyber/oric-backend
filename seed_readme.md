@@ -16,6 +16,12 @@ docker exec -it oric_local-backend-1 python manage.py <command>
 | `import_hec_workbook <path> --year 2025 [--keep]` | Imports any HEC workbook into the fiscal year ending in `--year` |
 | `seed_rbac [--additive]` | Re-syncs the capability catalog and built-in roles |
 
+| `import_hec_workbook <path> --year 2025 --only B.xi [--sheet "B.xi=Uploade PC"]` | Re-imports just those tables (their earlier rows in the year are replaced) |
+| `import_hec_workbook <path> --year 2025 --card-only` | Stores the workbook's Score Card ("as submitted to HEC") on the year's import; records untouched |
+| `repair_import_dates [--batch 1] [--apply]` | Re-dates records the old date parser mis-yeared ("30–31 July 2024" → 2030) |
+| `ensure_cycles --from 2020 --to 2026` | Creates missing fiscal years as CLOSED |
+| `clear_cycle --year 2026 [--dry-run] [--yes]` | Deletes every record of one fiscal year (asks first) |
+
 The HEC workbook is not committed (it contains staff contact details). Put a copy at
 `oric-backend/.local/hec_fy2024-25.xlsx`; `.local/` is git-ignored and mounted in the container.
 
@@ -50,3 +56,18 @@ directory emails; nothing is sent to them locally (mail goes to Mailpit at http:
 Any other person in `org/seed/people.csv` can sign in the same way. People whose department site publishes no email
 have a `@placeholder.neduet.edu.pk` address (`email_source=placeholder`); replace those with real addresses by
 re-importing `people.csv`.
+
+## Yearly HEC workbooks on a server
+
+`tools/import_hec_history.sh` imports FY 2019-20 .. 2025-26 on a deployed box (the code must be deployed first, so
+the migrations have run). Copy the seven workbooks there as `hec_<FY>.xlsx` (e.g. `~/oric_hec/hec_2019-20.xlsx`),
+then:
+
+```bash
+HEC_DIR=~/oric_hec ./import_hec_history.sh              # dry run: prints what the server holds and what would change
+HEC_DIR=~/oric_hec MODE=apply ./import_hec_history.sh   # for real
+```
+
+An already-imported FY 2024-25 keeps its records (dates repaired, Score Card stored). FY 2025-26 records entered in
+the portal are kept unless `CLEAR_2026=1`, which deletes every FY 2025-26 record first. Delete the workbooks from the
+server afterwards.
