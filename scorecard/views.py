@@ -45,7 +45,32 @@ class ScorecardView(CapabilityAPIViewMixin, APIView):
         data = engine.compute(cycle, include_pending=request.query_params.get("include_pending") in ("1", "true"),
                               faculty_id=_int(request.query_params.get("faculty")),
                               department_id=_int(request.query_params.get("department")))
-        return Response(data)
+        return Response({**data, "framework": cycle.framework, "framework_label": cycle.get_framework_display()})
+
+
+class AsSubmittedView(CapabilityAPIViewMixin, APIView):
+    """The Score Card exactly as filed in the year's HEC workbook (any template), from its latest import.
+    ``?cycle=`` → ``{card: null}`` when the year has no workbook import."""
+
+    required_capability = "scorecard.view"
+
+    def get(self, request):
+        from imports.models import ImportBatch
+
+        cycle = _cycle(request)
+        # the newest full import: table-only re-runs (stats["only"]) don't stand for the year's filed Score Card
+        batch = (ImportBatch.objects.filter(cycle=cycle, kind=ImportBatch.Kind.HEC_WORKBOOK,
+                                            status=ImportBatch.Status.APPLIED)
+                 .exclude(stats__has_key="only").order_by("-created_at").first())
+        card = (batch.stats.get("as_submitted") or None) if batch else None
+        return Response({
+            "cycle": cycle.pk, "cycle_label": cycle.label, "framework": cycle.framework,
+            "framework_label": cycle.get_framework_display(), "card": card,
+            "batch": batch.pk if batch else None, "file": batch.original_name if batch else None,
+            "imported_at": batch.created_at if batch else None,
+            # e.g. FY 2025-26 workbook whose Score Card still says "Reported Numbers (FY 2024-25)"
+            "reported_fy_mismatch": bool(card and card.get("reported_fy") and card["reported_fy"] != cycle.label),
+        })
 
 
 class OverrideSerializer(serializers.Serializer):
