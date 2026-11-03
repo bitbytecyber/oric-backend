@@ -333,3 +333,76 @@ def yearly_trend(user) -> list[dict]:
 
 def money(v) -> Decimal:
     return Decimal(str(v or 0))
+
+
+# ---------------------------------------------------------------------------
+# Multi-year activity report (person / department / faculty × several FYs)
+# ---------------------------------------------------------------------------
+SUMMARY_LEVELS = ("person", "department", "faculty")
+
+
+def summary_subject(level: str, obj_id: int) -> dict:
+    """Name of the person / department / faculty a summary is about (raises ObjectDoesNotExist)."""
+    if level == "person":
+        p = Person.objects.select_related("department").get(pk=obj_id)
+        sub = " · ".join(x for x in [p.designation, p.department.code if p.department_id else ""] if x)
+        return {"level": level, "id": p.pk, "name": p.full_name, "subtitle": sub}
+    if level == "department":
+        d = Department.objects.select_related("faculty").get(pk=obj_id)
+        return {"level": level, "id": d.pk, "name": d.name, "subtitle": d.faculty.name if d.faculty_id else ""}
+    if level == "faculty":
+        f = Faculty.objects.get(pk=obj_id)
+        return {"level": level, "id": f.pk, "name": f.name, "subtitle": f.code}
+    raise ValueError("unknown level")
+
+
+def fy_range_label(cycles: list[dict]) -> str:
+    if not cycles:
+        return "All fiscal years"
+    if len(cycles) == 1:
+        return cycles[0]["label"]
+    return f"{cycles[0]['label']} – {cycles[-1]['label']}"
+
+
+def summary(qs, cycle_ids: list[int]) -> dict:
+    """Category × fiscal-year counts and amounts for an already scoped + filtered queryset.
+
+    Categories come from the registry (so new pillars appear on their own); only categories with
+    at least one record in the range are returned. ``cells`` line up with ``cycles``.
+    """
+    from submissions.registry import CATEGORIES
+
+    cyc = ReportingCycle.objects.order_by("year")
+    if cycle_ids:
+        cyc = cyc.filter(pk__in=cycle_ids)
+    cycles = [{"id": c.pk, "label": c.label, "year": c.year} for c in cyc]
+    col = {c["id"]: i for i, c in enumerate(cycles)}
+    grid: dict[str, list[dict]] = {}
+    for r in qs.values("category", "cycle_id").annotate(n=Count("id", distinct=True), amount=Sum("amount_pkr")):
+        if r["cycle_id"] not in col:
+            continue
+        cells = grid.setdefault(r["category"], [{"count": 0, "amount_pkr": 0.0} for _ in cycles])
+        cells[col[r["cycle_id"]]] = {"count": r["n"], "amount_pkr": _f(r["amount"])}
+    col_totals = [{"count": 0, "amount_pkr": 0.0} for _ in cycles]
+    rows = []
+    for c in CATEGORIES:
+        cells = grid.get(c["key"])
+        if not cells:
+            continue
+        for i, cell in enumerate(cells):
+            col_totals[i]["count"] += cell["count"]
+            col_totals[i]["amount_pkr"] += cell["amount_pkr"]
+        rows.append({"key": c["key"], "title": c["title"], "short": c["short"], "pillar": c["pillar"],
+                     "hec_ref": c["excel"], "cells": cells,
+                     "total": {"count": sum(x["count"] for x in cells),
+                               "amount_pkr": sum(x["amount_pkr"] for x in cells)}})
+    pillars_used = {r["pillar"] for r in rows}
+    return {
+        "cycles": cycles,
+        "range_label": fy_range_label(cycles),
+        "pillars": [{"key": p["key"], "name": p["name"]} for p in PILLARS if p["key"] in pillars_used],
+        "categories": rows,
+        "totals": {"cells": col_totals,
+                   "total": {"count": sum(x["count"] for x in col_totals),
+                             "amount_pkr": sum(x["amount_pkr"] for x in col_totals)}},
+    }

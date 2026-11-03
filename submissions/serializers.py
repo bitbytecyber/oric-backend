@@ -47,10 +47,11 @@ class SubmissionListSerializer(serializers.ModelSerializer):
     organization_name = serializers.CharField(source="organization.name", read_only=True, default=None)
     submitted_by_name = serializers.CharField(source="submitted_by.full_name", read_only=True, default=None)
     on_behalf = serializers.SerializerMethodField()
+    publication = serializers.SerializerMethodField()
 
     class Meta:
         model = Submission
-        fields = ["id", "category", "category_label", "pillar", "cycle", "cycle_label", "title", "event_date",
+        fields = ["id", "category", "category_label", "pillar", "publication", "cycle", "cycle_label", "title", "event_date",
                   "amount_pkr", "scope_level", "funding_source", "organization", "organization_name", "owner",
                   "owner_name", "department", "department_code", "department_name", "faculty", "faculty_code",
                   "status", "status_label", "source", "needs_match", "submitted_at", "verified_at", "created_at",
@@ -58,6 +59,14 @@ class SubmissionListSerializer(serializers.ModelSerializer):
 
     def get_category_label(self, obj):
         return obj.category_def["short"]
+
+    def get_publication(self, obj):
+        """Journal and indexing categories, for publication rows only (shown under the title in lists)."""
+        if obj.pillar != "PUB":
+            return None
+        d = obj.data or {}
+        return {"journal": d.get("journal_name"), "sjr": d.get("sjr_quartile"), "jcr": d.get("jcr_quartile"),
+                "hjrs": d.get("hjrs_category"), "year_only": d.get("date_precision") == "year"}
 
     def get_on_behalf(self, obj):
         return bool(obj.submitted_by_id and obj.owner_id and obj.owner.user_id != obj.submitted_by_id)

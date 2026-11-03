@@ -16,7 +16,7 @@ from openpyxl.utils import get_column_letter
 from submissions.models import Submission
 from submissions.registry import CATEGORY_BY_KEY
 
-from .engine import compute
+from .engine import compute, irb_records
 from .models import InstitutionProfile
 
 TEAL = PatternFill("solid", fgColor="1F6F7A")
@@ -97,6 +97,21 @@ def _people_text(s: Submission) -> tuple[str, str]:
     return lead, "; ".join(others)
 
 
+class _IrbView:
+    """A proposal flagged "Reviewed by IRB", shown in the shape of the old ``irb_review`` table (B.x)."""
+
+    def __init__(self, s: Submission):
+        self._s = s
+        d = s.data
+        self.data = {"research_grant_name": d.get("research_grant_name"), "review_date": d.get("irb_review_date"),
+                     "thematic_area": d.get("thematic_area"), "research_proposal_title": d.get("research_proposal_title"),
+                     "total_amount_requested": d.get("total_funding_requested"), "start_date": d.get("start_date"),
+                     "end_date": d.get("end_date"), "irb_decision": d.get("irb_decision"), "key_deliverables": None}
+
+    def __getattr__(self, name):
+        return getattr(self._s, name)
+
+
 def _sheet(wb, name):
     return wb[name] if name in wb.sheetnames else wb.create_sheet(name)
 
@@ -121,8 +136,12 @@ def build(cycle, *, include_pending=False) -> bytes:
                     "INNOVATION & COMMERCIALIZATION", "Index-D": "SUSTAINABILITY & CAPACITY BUILDING"}[sheet]).font = \
                 Font(bold=True, size=13)
             row = 3
-        qs = base.filter(category=cat, **filters)
-        row = _table(sh, row, label, title, CATEGORY_BY_KEY[cat], list(qs))
+        if cat == "irb_review":
+            legacy, flagged = irb_records(base)
+            items = [*legacy, *(_IrbView(s) for s in flagged)]
+        else:
+            items = list(base.filter(category=cat, **filters))
+        row = _table(sh, row, label, title, CATEGORY_BY_KEY[cat], items)
         cursors[sheet] = row + 2
     for sh in wb.worksheets[2:]:
         for i in range(1, 20):

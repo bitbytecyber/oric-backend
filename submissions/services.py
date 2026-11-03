@@ -240,3 +240,50 @@ def advance(user, sub: Submission, next_category: str) -> Submission:
     new.lineage = sub
     new.save(update_fields=["lineage"])
     return new
+
+
+# ---------------------------------------------------------------------------
+# Publications: authors
+# ---------------------------------------------------------------------------
+@transaction.atomic
+def add_author(sub: Submission, person: Person) -> bool:
+    """Link ``person`` as an author of a publication (lead when it has none yet). False if already linked."""
+    if sub.contributors.filter(person=person).exists():
+        return False
+    if sub.owner_id is None:
+        sub.owner = person
+        sub.department = person.department
+        sub.faculty = person.department.faculty if person.department_id else None
+        Contributor.objects.create(submission=sub, role="author", person=person, order=0)
+    else:
+        Contributor.objects.create(submission=sub, role="co_author", person=person, order=sub.contributors.count())
+    sub.needs_match = False
+    sub.save()
+    sub.sync_departments()
+    return True
+
+
+def claimable_publications(person: Person):
+    """Publications whose printed author list carries ``person``'s surname but which are not linked to them."""
+    surname = (person.full_name or "").split()[-1:] or [""]
+    if len(surname[0]) < 3:
+        return Submission.objects.none()
+    linked = Contributor.objects.filter(person=person).values("submission_id")
+    return (Submission.objects.filter(pillar="PUB", data__authors_text__icontains=surname[0])
+            .exclude(status=Submission.Status.REJECTED).exclude(pk__in=linked).exclude(owner=person))
+
+
+@transaction.atomic
+def claim_publication(user, sub: Submission) -> Submission:
+    """A faculty member says "I am an author of this paper": link them and send it back to ORIC to verify."""
+    person = getattr(user, "person", None)
+    if person is None or not claimable_publications(person).filter(pk=sub.pk).exists():
+        raise ValidationError({"detail": "Your name does not appear in this paper's author list."})
+    add_author(sub, person)
+    before = sub.status
+    if before == Submission.Status.VERIFIED:
+        sub.status, sub.verified_by, sub.verified_at = Submission.Status.SUBMITTED, None, None
+        sub.save(update_fields=["status", "verified_by", "verified_at"])
+    ReviewEvent.objects.create(submission=sub, actor=user, action=ReviewEvent.Action.COMMENT, from_status=before,
+                               to_status=sub.status, comment=f"Authorship claimed by {person.full_name}")
+    return sub

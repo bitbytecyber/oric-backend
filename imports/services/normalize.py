@@ -309,3 +309,95 @@ class PersonMatcher:
         sugg = [{"person_id": p.pk, "name": p.full_name, "department": p.department.code if p.department_id else "",
                  "score": round(min(s, 1), 2)} for s, p in scored[:5]]
         return None, sugg
+
+
+# ---------------------------------------------------------------------------
+# Paper authors ("Khan, A. R., Fareed, S. and Riaz Uddin")
+# ---------------------------------------------------------------------------
+INITIALS_RE = re.compile(r"(?:[A-Z]\.?\s*-?\s*){1,4}")
+LEAD_INITIALS_RE = re.compile(r"(?:[A-Z]{1,3}|(?:[A-Z]\.)+[A-Z]?)\.?")
+OPTIONAL_GIVEN = {"muhammad", "syed", "syeda", "mohd"}
+
+
+def split_authors(cell) -> list[str]:
+    """Author list -> one string per author; "Surname, A. B." pairs are kept together."""
+    s = text(cell)
+    if not s:
+        return []
+    s = re.sub(r"\bet\.?\s*al\.?", " ", re.sub(r"[\n\u00b7]+", ",", s), flags=re.I)
+    s = re.sub(r"\s+(?:and|&)\s+", ", ", s)
+    tokens = [t.strip(" .;") for t in re.split(r"[;,]", s)]
+    out: list[str] = []
+    for t in (t for t in tokens if t):
+        if INITIALS_RE.fullmatch(t) and out and ", " not in out[-1] and " " not in out[-1].strip():
+            out[-1] = f"{out[-1]}, {t}"
+        else:
+            out.append(t)
+    return out
+
+
+def parse_author(name: str) -> tuple[str, list[str], list[str] | None]:
+    """-> (normalised surname, initials, given names or None when only initials were written)."""
+    if ", " in name:
+        sur, ini = name.split(", ", 1)
+        return norm_name(sur).replace(" ", ""), re.findall(r"[A-Z]", ini), None
+    words = name.split()
+    initials: list[str] = []
+    while len(words) > 1 and LEAD_INITIALS_RE.fullmatch(words[0]):
+        initials += re.findall(r"[A-Z]", words.pop(0))
+    tokens = norm_name(" ".join(words)).split()
+    if not tokens:
+        return "", initials, None
+    if initials:
+        return tokens[-1], initials, None
+    return tokens[-1], [t[0].upper() for t in tokens[:-1]], tokens[:-1]
+
+
+def _initials_fit(initials: list[str], given: list[str]) -> bool:
+    """'A R' fits 'abdul rehman'; a leading Muhammad / Syed may be left out of the initials."""
+    if not initials or not given:
+        return False
+    # "asad urrehman" (Asad-ur-Rehman) is written "A. R."
+    rooted = [re.sub(r"^u[lrds](?=[a-z]{3})", "", w) for w in given]
+    options = [given, rooted]
+    for g in (given, rooted):
+        if g[0] in OPTIONAL_GIVEN and len(g) > 1:
+            options.append(g[1:])
+    for g in options:
+        letters = [w[0].upper() for w in g]
+        if letters[0] != initials[0]:
+            continue
+        it = iter(letters)
+        if all(any(c == x for x in it) for c in initials):
+            return True
+    return False
+
+
+class AuthorMatcher:
+    """Match paper authors to NED people: full names via ``PersonMatcher``, "Khan, A. R." by surname + initials."""
+
+    def __init__(self, person_matcher: PersonMatcher | None = None):
+        self.pm = person_matcher or PersonMatcher()
+        self.by_surname: dict[str, list] = {}
+        for p, keys in self.pm.norms:
+            for key in keys:
+                parts = key.split()
+                if len(parts) >= 2:
+                    self.by_surname.setdefault(parts[-1], []).append((p, parts[:-1]))
+
+    def match(self, name: str):
+        """-> (person | None, suggestions, how) with how in exact / initials / ambiguous / none."""
+        surname, initials, given = parse_author(name)
+        if not surname:
+            return None, [], "none"
+        if given is not None:
+            person, sugg = self.pm.match(name)
+            if person:
+                return person, [], "exact"
+            return None, sugg, "ambiguous" if sugg and sugg[0]["score"] >= 0.85 else "none"
+        cands = {p.pk: p for p, g in self.by_surname.get(surname, []) if _initials_fit(initials, g)}
+        if len(cands) == 1:
+            return next(iter(cands.values())), [], "initials"
+        sugg = [{"person_id": p.pk, "name": p.full_name, "department": p.department.code if p.department_id else "",
+                 "score": 0.9} for p in list(cands.values())[:5]]
+        return None, sugg, "ambiguous" if sugg else "none"

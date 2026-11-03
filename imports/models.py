@@ -10,6 +10,7 @@ class ImportBatch(models.Model):
         HEC_WORKBOOK = "hec_workbook", "HEC scorecard workbook"
         FORM_RESPONSES = "form_responses", "Google Form responses"
         CATEGORY_CSV = "category_csv", "Category CSV / XLSX"
+        PUBLICATIONS = "publications", "Journal publications list"
 
     class Status(models.TextChoices):
         DRY_RUN = "dry_run", "Dry run"

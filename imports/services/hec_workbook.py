@@ -23,6 +23,7 @@ from django.utils import timezone
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
 
+from submissions.grants import normalize_grant_data
 from submissions.models import Contributor, ReviewEvent, Submission
 from submissions.registry import CATEGORY_BY_KEY, lead_slot
 from submissions.services import resolve_organization
@@ -724,6 +725,13 @@ def import_workbook(batch: ImportBatch, path: str, *, replace: bool = True, user
             _import_strategic_plan(batch, wb, cycle, user, res)
             if template == "index_2021":
                 _sheet_scores(wb, res)
+    if not only or "B.x" in only:
+        # B.x rows arrive as stand-alone IRB records; attach them to their proposals ("Reviewed by IRB")
+        from submissions.irb import merge_irb_reviews
+
+        merged = merge_irb_reviews(cycle=cycle, apply=True)
+        res.log.append(f"B.x: {len(merged['matched'])} IRB reviews attached to proposals, "
+                       f"{len(merged['unmatched'])} kept as stand-alone records")
     stats = {"created": res.created, "unmatched": res.unmatched, "skipped": res.skipped, "errors": res.errors,
              "per_table": res.per_table, "sheet_scorecard": res.per_table.pop("_sheet_scorecard", {}),
              "template": template, "flags": res.flags, "as_submitted": as_submitted}
@@ -936,7 +944,9 @@ def _import_table(batch, ws, hit: TableHit, spec: dict, matcher, res: ImportResu
         if evidence:
             data["evidence_link"] = evidence[0]
 
-        sub = Submission(category=cat["key"], cycle=batch.cycle, owner=owner, submitted_by=user, data=data,
+        # grant name / funding agency onto the dropdown values (a copy: the import row keeps the sheet's text)
+        sub_data = normalize_grant_data(cat["key"], data)
+        sub = Submission(category=cat["key"], cycle=batch.cycle, owner=owner, submitted_by=user, data=sub_data,
                          status=Submission.Status.VERIFIED, source=Submission.Source.EXCEL, import_batch=batch,
                          import_ref=f"{hit.sheet}!{r}", needs_match=needs_match, verified_by=user,
                          verified_at=timezone.now(), submitted_at=timezone.now())
@@ -946,9 +956,9 @@ def _import_table(batch, ws, hit: TableHit, spec: dict, matcher, res: ImportResu
         sub.promote()
         if not sub.event_date or not (batch.cycle.starts_on <= sub.event_date <= batch.cycle.ends_on):
             pass  # keep: the sheet says it belongs to this FY even when the typed date is off
-        org_field = next((f["name"] for f in cat["fields"] if f["type"] == "org" and data.get(f["name"])), None)
+        org_field = next((f["name"] for f in cat["fields"] if f["type"] == "org" and sub_data.get(f["name"])), None)
         if org_field:
-            sub.organization = resolve_organization(str(data[org_field])[:255])
+            sub.organization = resolve_organization(str(sub_data[org_field])[:255])
         sub.save()
         for c in contributors:
             c.submission = sub

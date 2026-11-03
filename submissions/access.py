@@ -87,9 +87,11 @@ def can_delete(user, sub: Submission) -> bool:
 
 def can_add(user, *, category: str, person=None) -> bool:
     """May ``user`` record a ``category`` submission owned by ``person`` (None = institution-level)?"""
+    c = CATEGORY_BY_KEY[category]
+    if c["retired"]:
+        return False
     if user.is_superuser:
         return True
-    c = CATEGORY_BY_KEY[category]
     if c["oric_only"]:
         return user_can_on(user, "submission.add_oric", pillar=c["pillar"], category=category)
     own_person = getattr(user, "person", None) if hasattr(user, "person") else None
