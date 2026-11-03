@@ -24,6 +24,8 @@ AUTHENTICATED_EXEMPT_ROUTE_NAMES = {
     "explore",
     "reports-export",
     "reports-export-columns",
+    "reports-summary",
+    "reports-bos",
     "saved-views-list",
     "saved-views-detail",
 }

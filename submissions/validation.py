@@ -21,6 +21,12 @@ def file_fields(category: str) -> list[dict]:
     return [f for f in CATEGORY_BY_KEY[category]["fields"] if f["type"] == "file"]
 
 
+def is_shown(field: dict, data: dict) -> bool:
+    """A field with ``show_if`` only exists (is kept and required) while its condition holds."""
+    cond = field.get("show_if")
+    return not cond or all(data.get(k) == v for k, v in cond.items())
+
+
 def clean_value(field: dict, raw):
     """Return the normalised value or raise ValueError with a human message."""
     t = field["type"]
@@ -79,6 +85,8 @@ def validate_data(category: str, data: dict, *, existing_files: set[str] = froze
     errors, cleaned = {}, {}
     for f in c["fields"]:
         name = f["name"]
+        if not is_shown(f, data):
+            continue
         if f["type"] == "file":
             if f["required"] and not draft and name not in existing_files and name not in incoming_files                     and not data.get("evidence_link"):
                 errors[name] = "Attach the file or paste an evidence link."

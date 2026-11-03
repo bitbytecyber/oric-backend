@@ -12,6 +12,15 @@ from .models import InstitutionProfile, KpiOverride
 
 S = Submission.Status
 PROPOSAL_CATEGORIES = ["grant_hec_submitted", "grant_nonhec_submitted", "joint_submitted"]
+IRB_KPI = "B.x"
+
+
+def irb_records(base):
+    """Proposals reviewed by IRB (KPI B.x): proposals flagged "Reviewed by IRB = Yes", plus old stand-alone
+    ``irb_review`` records that ``merge_irb_reviews`` could not attach to a proposal."""
+    legacy = base.filter(category="irb_review").exclude(data__has_key="_merged_into")
+    flagged = base.filter(category__in=PROPOSAL_CATEGORIES, data__irb_reviewed="Yes")
+    return legacy, flagged
 
 
 def band_score(bands, measure) -> float:
@@ -96,6 +105,8 @@ def compute(cycle, *, include_pending=False, faculty_id=None, department_id=None
         elif kpi["kind"] == "sum":
             value = float(_records(base, kpi).aggregate(v=Sum("amount_pkr"))["v"] or 0)
             unit = "pkr"
+        elif code == IRB_KPI:
+            value = sum(qs.count() for qs in irb_records(base))
         else:
             value = _records(base, kpi).count()
         ov = overrides.get(code)

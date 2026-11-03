@@ -35,6 +35,15 @@ IP_CATEGORY = ["Patent", "Trade mark", "Design patent", "Copyrights", "Product",
 DEV_STATUS = ["Idea", "Design", "Prototype", "Validation", "Production"]
 EVENT_KIND = ["Training", "Workshop", "Seminar", "Conference", "Webinar"]
 AUDIENCE = ["Students", "Faculty", "Researchers", "Industry", "Mixed"]
+# "Others" is the form's own "Others…" entry (other=True): the free text is stored as the value
+GRANT_SCHEMES = ["NRPU", "GCF", "TTSF", "TDF", "ICRG", "LCF"]
+FUNDING_AGENCIES = ["HEC", "MoST", "NED", "NEDAASC", "Sindh HEC", "UNESCO", "European Commission"]
+YES_NO = ["Yes", "No"]
+IRB_DECISIONS = ["Approved", "Require modification", "Deferred", "Disapproved"]
+QUARTILES = ["Q1", "Q2", "Q3", "Q4", "Not indexed"]
+HJRS_CATEGORIES = ["W", "X", "Y", "Not listed"]
+RESEARCH_IMPACT = ["Commercialization initiative", "Licensing agreement", "Policy development", "Media headlines",
+                   "Industrial linkages", "Spin-off", "Economic & environmental improvement"]
 THEMATIC_AREAS = [
     "Health Sciences", "Pharmacy & Medicinal Chemistry", "Psychology, Psychiatry and Neuroscience",
     "Plant Sciences", "Chemistry", "Animal Sciences", "Earth Systems and Environmental Sciences",
@@ -52,12 +61,18 @@ PILLARS = [
      "tagline": "Trainings, exhibitions, revenue & strategic planning"},
     {"key": "BIC", "index": "", "name": "Business Incubation (BIC)",
      "tagline": "Faculty startups, spin-offs, startup funding & entrepreneurship events"},
+    {"key": "PUB", "index": "", "name": "Research Publications", "scorecard": False,
+     "tagline": "Journal articles and other research outputs (not part of the HEC ORIC scorecard)"},
 ]
+SCORECARD_PILLARS = [p["key"] for p in PILLARS if p.get("scorecard", True)]
 PILLAR_BY_KEY = {p["key"]: p for p in PILLARS}
 
 
-def F(name, label, type="text", required=True, options=None, other=False, help=None, wide=False):
+def F(name, label, type="text", required=True, options=None, other=False, help=None, wide=False, show_if=None):
+    """``show_if={"field": "value"}`` shows (and requires) the field only while another field has that value."""
     f = {"name": name, "label": label, "type": type, "required": required}
+    if show_if:
+        f["show_if"] = show_if
     if options is not None:
         f["options"] = options
     if other:
@@ -97,8 +112,9 @@ def duration():
 def grant_fields(*, date_name, date_label, amount_name, amount_label, nat_int=True, extra_before=(),
                  extra_after=(), grant_help=None):
     return [
-        F("research_grant_name", "Name of research grant / scheme", help=grant_help),
-        F("funding_agency", "Funding agency", "org", required=False),
+        F("research_grant_name", "Name of research grant / scheme", "select", options=GRANT_SCHEMES, other=True,
+          help=grant_help),
+        F("funding_agency", "Funding agency", "org", required=False, options=FUNDING_AGENCIES, other=True),
         F(date_name, date_label, "date"),
         *([F("national_or_international", "National or international", "select", options=NAT_INT)]
           if nat_int else []),
@@ -112,6 +128,19 @@ def grant_fields(*, date_name, date_label, amount_name, amount_label, nat_int=Tr
         *extra_after,
         F("remarks", "Remarks / other information", "textarea", required=False),
         EVIDENCE(), EVIDENCE_LINK(),
+    ]
+
+
+def irb_fields():
+    """"Reviewed by IRB" lives on the proposal itself (it used to be the separate ``irb_review`` category)."""
+    when = {"irb_reviewed": "Yes"}
+    return [
+        F("irb_reviewed", "Reviewed by IRB?", "radio", options=YES_NO, required=False),
+        F("irb_review_date", "Date of IRB review", "date", show_if=when),
+        F("irb_decision", "IRB meeting decision", "select", options=IRB_DECISIONS, show_if=when),
+        F("irb_minutes", "IRB meeting minutes", "file", required=False, show_if=when,
+          help="PDF, Word or image, max 10 MB."),
+        F("irb_minutes_link", "IRB minutes link", "url", required=False, show_if=when),
     ]
 
 
@@ -141,13 +170,15 @@ def event_fields(*, organizer=False, audience=True, kinds=EVENT_KIND, staff=Fals
 
 def C(key, pillar, title, *, form="", excel="", kpis=(), fields, people=(), oric_only=False, title_field=None,
       date_field=None, amount_field=None, amount_unit="M", scope_field=None, funding_source=None,
-      next_stages=(), short=None, help=None, group=None):
+      next_stages=(), short=None, help=None, group=None, retired=False):
     return {
         "key": key, "pillar": pillar, "title": title, "short": short or title, "form": form, "excel": excel,
         "kpis": list(kpis), "fields": fields, "people": list(people), "oric_only": oric_only,
         "title_field": title_field, "date_field": date_field, "amount_field": amount_field,
         "amount_unit": amount_unit, "scope_field": scope_field, "funding_source": funding_source,
         "next_stages": list(next_stages), "help": help, "group": group or title,
+        # retired: kept so old records still read, but no new records can be added
+        "retired": retired,
     }
 
 
@@ -181,7 +212,7 @@ RE = [
       fields=grant_fields(date_name="proposal_submission_date", date_label="Date of proposal submission",
                           amount_name="total_funding_requested", amount_label="Total funding requested (PKR million)",
                           nat_int=False, grant_help="NRPU, GCF, TTSF, ICRG, LCF, TDF …",
-                          extra_after=[F("status", "Status", "select", options=PROPOSAL_STATUS)])),
+                          extra_after=[F("status", "Status", "select", options=PROPOSAL_STATUS), *irb_fields()])),
     C("grant_hec_approved", "RE", "HEC research project approved", short="HEC project approved",
       form="F1 · 1(a)(ii)-A", excel="B.iii", kpis=["B.iii", "B.ix"], group="Research grants",
       people=[PI, CO_PI], title_field="research_proposal_title", date_field="proposal_approval_date",
@@ -213,7 +244,7 @@ RE = [
       next_stages=["grant_nonhec_approved"],
       fields=grant_fields(date_name="proposal_submission_date", date_label="Date of proposal submission",
                           amount_name="total_funding_requested", amount_label="Total funding requested (PKR million)",
-                          extra_after=[F("status", "Status", "select", options=PROPOSAL_STATUS)])),
+                          extra_after=[F("status", "Status", "select", options=PROPOSAL_STATUS), *irb_fields()])),
     C("grant_nonhec_approved", "RE", "Non-HEC research project approved", short="Non-HEC project approved",
       form="F1 · 1(a)(ii)-B", excel="B.vi", kpis=["B.vi", "B.ix"], group="Research grants",
       people=[PI, CO_PI], title_field="research_proposal_title", date_field="proposal_approval_date",
@@ -244,7 +275,7 @@ RE = [
       next_stages=["joint_approved"],
       fields=grant_fields(date_name="submission_date", date_label="Date of joint project submission",
                           amount_name="total_funding_requested", amount_label="Total funding requested (PKR million)",
-                          extra_after=[F("status", "Status / remarks", required=False)])),
+                          extra_after=[F("status", "Status / remarks", required=False), *irb_fields()])),
     C("joint_approved", "RE", "Joint research project approved", short="Joint project approved",
       form="F1 · 1(a)(iv)-B", excel="B.viii-b", kpis=["B.viii", "B.ix"], group="Research grants",
       people=[PI, CO_PI], title_field="research_proposal_title", date_field="approval_date",
@@ -267,7 +298,7 @@ RE = [
                           ])),
 
     C("irb_review", "RE", "Proposal reviewed by IRB", short="IRB review", excel="B.x", kpis=["B.x"],
-      oric_only=True, group="ORIC operations", people=[PI], title_field="research_proposal_title",
+      oric_only=True, retired=True, group="ORIC operations", people=[PI], title_field="research_proposal_title",
       date_field="review_date", amount_field="total_amount_requested",
       fields=[
           F("research_grant_name", "Research grant & funding body applied"),
@@ -276,8 +307,7 @@ RE = [
           F("research_proposal_title", "Title of research proposal", wide=True),
           F("total_amount_requested", "Total amount requested (PKR million)", "decimal", required=False),
           *duration(),
-          F("irb_decision", "IRB meeting decision", "select",
-            options=["Approved", "Require modification", "Deferred", "Disapproved"]),
+          F("irb_decision", "IRB meeting decision", "select", options=IRB_DECISIONS),
           F("key_deliverables", "Key expected deliverables & outcomes", "textarea", required=False),
           EVIDENCE("IRB meeting minutes"), EVIDENCE_LINK(),
       ]),
@@ -403,8 +433,9 @@ RE = [
           F("members", "Board members and attendance", "textarea", required=False),
           EVIDENCE(), EVIDENCE_LINK(),
       ]),
+    # superseded by the Publications module (journal_article), which also records the HJRS category
     C("publication", "RE", "Research publication (HJRS)", short="Publication", form="F2 · 13", excel="",
-      group="Publications", people=[P("author", "NED author", lead=True), P("co_author", "Co-author(s)", many=True,
+      retired=True, group="Publications", people=[P("author", "NED author", lead=True), P("co_author", "Co-author(s)", many=True,
                                                                              required=False)],
       title_field="publication_title", date_field="publication_date",
       fields=[
@@ -733,11 +764,40 @@ BIC = [
       ]),
 ]
 
-CATEGORIES: list[dict] = [*RE, *IC, *SCB, *BIC]
+# =============================================================================
+# PUB — Research publications (own module; no HEC scorecard KPIs)
+# =============================================================================
+PUB = [
+    C("journal_article", "PUB", "Journal article", short="Journal article", group="Journal publications",
+      people=[P("author", "NED author", lead=True),
+              P("co_author", "Other NED author(s)", many=True, required=False, external=False)],
+      title_field="title", date_field="publication_date",
+      help="Published journal paper. ORIC verifies the SJR / JCR quartiles.",
+      fields=[
+          F("title", "Title of paper", wide=True),
+          F("journal_name", "Journal name"),
+          F("authors_text", "All authors (as printed in the paper)", "textarea"),
+          F("publication_date", "Date of publication / e-print", "date"),
+          F("doi", "DOI", required=False, help="e.g. 10.1109/ACCESS.2023.3272499"),
+          F("url", "Paper link", "url", required=False),
+          F("sjr_quartile", "SJR category", "select", options=QUARTILES, required=False),
+          F("jcr_quartile", "Clarivate (JCR) category", "select", options=QUARTILES, required=False),
+          F("jcr_subject", "JCR subject category", required=False, help="e.g. Q2 in CE, Construction & Building Tech"),
+          F("hjrs_category", "HJRS category", "select", options=HJRS_CATEGORIES, required=False),
+          F("context_statement", "Abstract / context statement (max 150 words)", "textarea", required=False,
+            help="Originality (newness), rigour (methods) and significance (contribution to the field)."),
+          F("research_impact", "Research impact", "select", options=RESEARCH_IMPACT, other=True, required=False),
+          EVIDENCE("Paper (PDF)"), EVIDENCE_LINK(),
+      ]),
+]
+
+CATEGORIES: list[dict] = [*RE, *IC, *SCB, *BIC, *PUB]
 CATEGORY_BY_KEY: dict[str, dict] = {c["key"]: c for c in CATEGORIES}
 CATEGORY_CHOICES = [(c["key"], c["short"]) for c in CATEGORIES]
 PILLAR_CHOICES = [(p["key"], p["name"]) for p in PILLARS]
 ORIC_ONLY_KEYS = frozenset(c["key"] for c in CATEGORIES if c["oric_only"])
+RETIRED_KEYS = frozenset(c["key"] for c in CATEGORIES if c["retired"])
+PUB_KEYS = frozenset(c["key"] for c in CATEGORIES if c["pillar"] == "PUB")
 
 assert len(CATEGORY_BY_KEY) == len(CATEGORIES), "duplicate category key"
 

@@ -17,10 +17,12 @@ from people.models import Person
 from rbac.viewsets import RBACViewSetMixin
 from submissions.models import Submission
 from submissions.registry import CATEGORY_BY_KEY
+from submissions.services import add_author
 
 from .models import ImportBatch, ImportRow
 from .services import category_csv
 from .services.hec_workbook import import_workbook
+from .services.publications import import_publications
 
 
 class ImportBatchSerializer(serializers.ModelSerializer):
@@ -147,6 +149,32 @@ class ImportBatchViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
             batch.stats, batch.status = stats, ImportBatch.Status.APPLIED
             batch.save()
             return Response(self.get_serializer(self.get_queryset().get(pk=batch.pk)).data, status=201)
+
+        if kind == ImportBatch.Kind.PUBLICATIONS:
+            # no fiscal year to pick: each paper goes to the year of its publication date
+            with tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False) as tmp:
+                for chunk in upload.chunks():
+                    tmp.write(chunk)
+                path = tmp.name
+            try:
+                stats, log = {}, ""
+                try:
+                    with transaction.atomic():
+                        batch = ImportBatch.objects.create(kind=kind, original_name=upload.name,
+                                                           created_by=request.user)
+                        stats = import_publications(batch, path, user=request.user)
+                        log = batch.log
+                        if dry:
+                            raise _Rollback
+                except _Rollback:
+                    return Response({"dry_run": True, "result": stats, "log": log})
+                except ValueError as e:  # no Title / Authors header
+                    raise ValidationError({"file": str(e)}) from e
+                upload.seek(0)
+                batch.file.save(upload.name, upload, save=True)
+            finally:
+                os.unlink(path)
+            return Response(self.get_serializer(self.get_queryset().get(pk=batch.pk)).data, status=201)
         raise ValidationError({"kind": "Unknown import kind."})
 
     def destroy(self, request, *args, **kwargs):
@@ -218,13 +246,23 @@ class ImportRowViewSet(RBACViewSetMixin, viewsets.ReadOnlyModelViewSet):
                                                is_phd="dr" in (c.get("full_name") or "").lower(), source="import")
             else:
                 raise ValidationError({"person": "Pick a person, create one, or ignore."})
-            spelled = row.parsed.get("_lead_name") or row.person_text.split(",")[0].strip()
+            if row.table == "PUB":
+                # a paper's author list: the name whose suggestions held this person ("Hasan, S" forms are not
+                # aliases; initials are matched by surname)
+                amb = (row.parsed.get("_authors") or {}).get("ambiguous") or []
+                spelled = next((a["name"] for a in amb if any(s["person_id"] == person.pk for s in a["suggestions"])),
+                               amb[0]["name"] if len(amb) == 1 else "")
+                spelled = "" if "," in spelled else spelled
+            else:
+                spelled = row.parsed.get("_lead_name") or row.person_text.split(",")[0].strip()
             if spelled and spelled != person.full_name and spelled not in (person.aliases or []):
                 person.aliases = [*(person.aliases or []), spelled[:255]]
                 person.save(update_fields=["aliases"])
             for r in rows:
                 sub = r.submission
-                if sub:
+                if sub and sub.pillar == "PUB":
+                    add_author(sub, person)
+                elif sub:
                     sub.owner = person
                     sub.department = person.department
                     sub.faculty = person.department.faculty if person.department_id else None

@@ -1,4 +1,5 @@
-"""Submission exports: flat table (CSV / XLSX), one-sheet-per-category workbook, evidence ZIP."""
+"""Submission exports: flat table (CSV / XLSX), one-sheet-per-category workbook, multi-year activity
+report workbook, evidence ZIP."""
 from __future__ import annotations
 
 import csv
@@ -104,16 +105,12 @@ def to_xlsx(qs, columns, *, title="Submissions") -> bytes:
     return out.getvalue()
 
 
-def to_xlsx_by_category(qs) -> bytes:
-    """One sheet per category with every registry field as its own column."""
-    wb = Workbook()
-    wb.remove(wb.active)
-    summary = wb.create_sheet("Summary")
-    summary.append(["Category", "HEC ref", "Form ref", "Records", "Amount (PKR)"])
-    qs = list(qs)
+def _category_sheets(wb, qs) -> list[tuple[dict, list]]:
+    """Append one sheet per category (registry order) with every registry field as its own column."""
     by_cat: dict[str, list] = {}
     for s in qs:
         by_cat.setdefault(s.category, []).append(s)
+    written = []
     for c in CATEGORIES:
         items = by_cat.get(c["key"])
         if not items:
@@ -132,10 +129,68 @@ def to_xlsx_by_category(qs) -> bytes:
                        "; ".join(f.original_name for f in s.files.all()), " ".join(s.evidence_links or [])])
         _style_header(ws, len(head))
         _autosize(ws)
+        written.append((c, items))
+    return written
+
+
+def to_xlsx_by_category(qs) -> bytes:
+    """One sheet per category with every registry field as its own column."""
+    wb = Workbook()
+    wb.remove(wb.active)
+    summary = wb.create_sheet("Summary")
+    summary.append(["Category", "HEC ref", "Form ref", "Records", "Amount (PKR)"])
+    for c, items in _category_sheets(wb, list(qs)):
         summary.append([c["short"], c["excel"], c["form"], len(items),
                         float(sum((s.amount_pkr or 0) for s in items))])
     _style_header(summary, 5)
     _autosize(summary)
+    out = io.BytesIO()
+    wb.save(out)
+    return out.getvalue()
+
+
+def to_xlsx_summary(qs, data: dict) -> bytes:
+    """Multi-year activity report: a "Summary" sheet (category × FY counts and amounts, titled with the
+    subject and FY range) followed by the per-category sheets of ``to_xlsx_by_category``."""
+    from submissions.registry import PILLAR_BY_KEY
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Summary"
+    subject, cycles = data["subject"], data["cycles"]
+    ws.append([f"Activity report — {subject['name']}"])
+    ws.append([" · ".join(x for x in [subject["level"].title(), subject.get("subtitle"), data["range_label"]] if x)])
+    ws.append([])
+    ws["A1"].font = Font(bold=True, size=14)
+    ws["A2"].font = Font(italic=True, color="555555")
+    head = ["Pillar", "Category", "HEC ref"]
+    for c in cycles:
+        head += [f"{c['label']} records", f"{c['label']} amount (PKR)"]
+    head += ["Total records", "Total amount (PKR)"]
+    ws.append(head)
+    hr = ws.max_row
+    for row in data["categories"]:
+        line = [PILLAR_BY_KEY.get(row["pillar"], {}).get("name", row["pillar"]), row["short"], row["hec_ref"]]
+        for cell in row["cells"]:
+            line += [cell["count"], cell["amount_pkr"]]
+        ws.append(line + [row["total"]["count"], row["total"]["amount_pkr"]])
+    totals = ["Total", "", ""]
+    for cell in data["totals"]["cells"]:
+        totals += [cell["count"], cell["amount_pkr"]]
+    ws.append(totals + [data["totals"]["total"]["count"], data["totals"]["total"]["amount_pkr"]])
+    for cell in ws[ws.max_row]:
+        cell.font = Font(bold=True)
+    for i in range(1, len(head) + 1):
+        cell = ws.cell(row=hr, column=i)
+        cell.fill, cell.font = HEADER_FILL, HEADER_FONT
+        cell.alignment = Alignment(vertical="center", wrap_text=True)
+        if i > 3 and (i - 3) % 2 == 0:
+            for r in range(hr + 1, ws.max_row + 1):
+                ws.cell(row=r, column=i).number_format = "#,##0"
+    ws.freeze_panes = ws.cell(row=hr + 1, column=3)
+    for i in range(1, len(head) + 1):
+        ws.column_dimensions[get_column_letter(i)].width = 34 if i == 2 else (22 if i == 1 else 14)
+    _category_sheets(wb, list(qs))
     out = io.BytesIO()
     wb.save(out)
     return out.getvalue()

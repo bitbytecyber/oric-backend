@@ -6,7 +6,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -63,10 +63,10 @@ class SubmissionViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
     capability_map = {
         "list": None, "retrieve": None, "create": None, "partial_update": None, "destroy": None,
         "transition": None, "advance": None, "bulk_transition": "submission.verify", "proxy_people": None,
-        "can_add": None, "people_search": None,
+        "can_add": None, "people_search": None, "claimable": None, "claim": None,
     }
     self_scoped_actions = {"list", "retrieve", "create", "partial_update", "destroy", "transition", "advance",
-                           "proxy_people", "can_add", "people_search"}
+                           "proxy_people", "can_add", "people_search", "claimable", "claim"}
     scope_queryset_by_capability = False
     filterset_class = SubmissionFilter
     ordering_fields = ["event_date", "updated_at", "created_at", "amount_pkr", "title", "status", "category",
@@ -201,6 +201,25 @@ class SubmissionViewSet(RBACViewSetMixin, viewsets.ModelViewSet):
             raise InsufficientPermissionError(required_permission="submission.add")
         new = services.advance(request.user, sub, nxt)
         return Response(self._detail(new), status=status.HTTP_201_CREATED)
+
+    # --- publications: "this paper is mine" ------------------------------------------
+    @action(detail=False, methods=["get"])
+    def claimable(self, request):
+        """Papers whose author list carries the user's surname but are not linked to them yet."""
+        person = getattr(request.user, "person", None)
+        if person is None:
+            return Response([])
+        qs = services.claimable_publications(person).select_related(*LIST_RELATED).order_by("-event_date")[:50]
+        return Response(SubmissionListSerializer(qs, many=True).data)
+
+    @action(detail=True, methods=["post"])
+    def claim(self, request, pk=None):
+        # not get_object(): faculty cannot see other people's records, but may claim a paper listed by `claimable`
+        sub = Submission.objects.filter(pk=pk, pillar="PUB").first()
+        if sub is None:
+            raise NotFound()
+        services.claim_publication(request.user, sub)
+        return Response(self._detail(sub))
 
     # --- helpers for the form ------------------------------------------------------
     @action(detail=False, methods=["get"], url_path="proxy-people")
